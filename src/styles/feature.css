@@ -2,6 +2,7 @@
 .features-section {
     padding: 4rem 1rem;
     background-color: var(--color-gray-50);
+    background-color: white;
 }
 
 .features-title {
@@ -19,15 +20,16 @@
 }
 
 .feature-card {
-    background-color: var(--color-white);
+    background-color: white;
     padding: 1.5rem;
     border-radius: 0.5rem;
     transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 .feature-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    box-shadow: none;
 }
 
 .feature-icon {
@@ -51,6 +53,6 @@
 }
 
 .feature-description {
-    color: var(--color-gray-500);
+    color: #6b7280;
     font-size: 0.875rem;
 }
