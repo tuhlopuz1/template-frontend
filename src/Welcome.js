@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from "react-router-dom";
 import FeatureCard from "./components/FeatureCard.js";
 import './styles/welcome.css';
 import Navbar from "./components/NavBar";
