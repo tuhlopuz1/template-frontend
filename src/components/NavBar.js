@@ -7,7 +7,7 @@ const Navbar = ({ currentPath }) => {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-inner">
-          <Link href="/">
+          <Link to="/">
             <a className="logo-link">
               <Logo />
             </a>
@@ -15,12 +15,12 @@ const Navbar = ({ currentPath }) => {
 
 
           <div className="navbar-actions">
-            <Link href="/login">
+            <Link to="/login">
               <a className="btn login-btn">
                 Log in
               </a>
             </Link>
-            <Link href="/signup">
+            <Link to="/signup">
               <a className="btn signup-btn">
                 Sign up
               </a>

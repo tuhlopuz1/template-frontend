@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import FeatureCard from "./components/FeatureCard.js";
 import './styles/welcome.css';
 import Navbar from "./components/NavBar";
@@ -80,12 +81,10 @@ const WelcomePage = () => {
             Your all-in-one platform for productivity and collaboration. Start organizing your work and life in a whole new way.
           </p>
           <div className="cta-buttons">
-            <Link href="/signup">
-              <a className="cta-button primary">Get Started</a>
-            </Link>
-            <Link href="/login">
-              <a className="cta-button secondary">Log in</a>
-            </Link>
+          <Link to="/signup" className="cta-button primary">Get Started</Link>
+          <Link to="/login" className="cta-button secondary">Log in</Link>
+
+
           </div>
         </div>
 
