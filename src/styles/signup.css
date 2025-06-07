@@ -1,11 +1,18 @@
+
+
 .signup-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 48px 16px;
     min-height: 100vh;
     background-color: #f9f9f9;
+    background-image: url(https://cdn.deepseek.com/blog/banner-background.webp);
+    background-repeat: no-repeat;
+    background-size: cover; 
+    background-position: center; 
+    backdrop-filter: blur(10px);
   }
+
   
   .signup-box {
     width: 100%;
@@ -102,8 +109,9 @@
     border-radius: 4px;
     cursor: pointer;
   }
+
   
-  .submit-button:hover {
-    background-color: #1e40af;
+  #close-svg {
+    width: 7%;
+    color: black;
   }
-  
