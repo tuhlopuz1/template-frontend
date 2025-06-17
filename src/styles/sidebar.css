@@ -60,7 +60,7 @@
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 24px;
-    text-align: center;
+    /* text-align: center; */
     color: #3b82f6;
   }
   
@@ -136,6 +136,22 @@
     height: 100%;
     stroke: currentColor;
   }
+
+  .close-button {
+    padding: 0.5rem;
+    
+    border: none;
+    background-color: #fff;
+    
+  }
+
+
+
+  /* Состояние фокуса */
+  .close-button:focus {
+    outline: none;           /* focus:outline-none */
+  }
+
   
   /* Responsive styles */
   @media (max-width: 768px) {
@@ -157,5 +173,9 @@
     .sidebar {
       position: sticky;
       transform: translateX(0);
+    }
+
+    .close-button {
+      display: none;
     }
   }

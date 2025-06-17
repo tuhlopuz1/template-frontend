@@ -43,10 +43,21 @@ const Sidebar = () => {
         className={`sidebar ${isOpen ? 'open' : ''}`}
       >
         <div className="sidebar-content">
-          <div className="sidebar-header">
-            Личный кабинет
-          </div>
           
+          <div className="sidebar-header">
+            <button
+              onClick={toggleSidebar}
+              className="close-button"
+              >
+              <FiX size={25} />
+            </button>
+            что то типа хз
+
+
+          </div>
+
+              
+
           <nav className="sidebar-nav">
             <ul>
               {menuItems.map((item) => (
