@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Link } from 'react-router-dom';
 import Logo from './components/Logo';
-import { validateSignup } from './components/validation';
+import { validateLogin, validateSignup } from './components/validation';
 import './styles/signup.css';
 import Navbar from './components/NavBar';
 
@@ -26,10 +26,11 @@ const LogInPage = () => {
   };
 
   const handleSubmit = (e) => {
+    console.log(formData)
     e.preventDefault();
 
-    const validationResult = validateSignup(formData);
-
+    const validationResult = validateLogin(formData);
+    console.log(validationResult)
     if (validationResult.isValid) {
       console.log('Signup successful!', formData);
       alert('Signup successful! Welcome to AppName!');
@@ -43,9 +44,9 @@ const LogInPage = () => {
     <div className="signup-container">
         <Navbar/>
       <div className="signup-box">
-        <Link to="/" className="close-button">
-          <svg id="close-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        <Link to="/" className="back-button">
+          <svg id="close-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
         </Link>
         <div className="signup-header">
@@ -68,7 +69,7 @@ const LogInPage = () => {
               id="email"
               name="email"
               type="email"
-              value={formData.email}
+              value={formData.identifier}
               onChange={handleChange}
               className={`form-input ${errors.email ? 'input-error' : ''}`}
               placeholder="Email address or username"
@@ -92,7 +93,7 @@ const LogInPage = () => {
 
 
           <button type="submit" className="submit-button">
-            Sign up
+            Log in
           </button>
         </form>
       </div>

@@ -51,7 +51,7 @@ const Sidebar = () => {
               >
               <FiX size={25} />
             </button>
-            что то типа хз
+            
 
 
           </div>

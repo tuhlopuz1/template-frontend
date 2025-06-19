@@ -103,13 +103,15 @@
   .submit-button {
     padding: 10px;
     background-color: #2563eb;
+    text-align: center;
+    text-decoration: none;
     color: white;
     font-size: 14px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
-
+  
   
   #close-svg {
     width: 7%;
