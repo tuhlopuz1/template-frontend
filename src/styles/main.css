@@ -1,0 +1,126 @@
+/* Основной layout */
+.main-layout {
+  display: flex;
+}
+
+/* Видео секция */
+.video-section {
+  /* flex: 1; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  min-height: 100vh;
+  padding-left: 100px; /* ширина сайдбара */
+  padding-right : 100px; /* ширина сайдбара */
+}
+
+.video-container {
+  width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: black;
+}
+
+.main-video {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Кнопки действий */
+.action-buttons {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.action-btn {
+  background-color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* Комментарии */
+.comment-section {
+  width: 300px;
+  background-color: #f9f9f9;
+  padding: 16px;
+  height: 100vh;
+  overflow-y: auto;
+  border-left: 1px solid #e5e7eb;
+}
+
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comments-content {
+  font-size: 14px;
+  color: #333;
+}
+
+
+/* ========== Mobile адаптив ========== */
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
+    padding-left: 0;
+  }
+
+  .video-section {
+    padding-left: 0;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .video-container {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .main-video {
+    height: 100vh;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .action-buttons {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+
+  .comment-section {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background-color: #fff;
+    transition: bottom 0.3s ease;
+    z-index: 15;
+    border-top: 1px solid #ddd;
+  }
+
+  .comment-section.open {
+    bottom: 0;
+  }
+}
