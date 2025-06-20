@@ -1,17 +1,15 @@
 import { useState } from 'react';
-import { useLocation } from 'wouter';
 import { Link } from 'react-router-dom';
 import Logo from './components/Logo';
-import { validateLogin, validateSignup } from './components/validation';
+import { validateLogin } from './components/validation';
 import './styles/signup.css';
 import Navbar from './components/NavBar';
 
 
 const LogInPage = () => {
-  const [, setLocation] = useLocation();
+  
   const [formData, setFormData] = useState({
-    email: '',
-    username: '',
+    identifier: '',
     password: '',
     termsAccepted: false
   });
@@ -33,8 +31,9 @@ const LogInPage = () => {
     console.log(validationResult)
     if (validationResult.isValid) {
       console.log('Signup successful!', formData);
-      alert('Signup successful! Welcome to AppName!');
-      setLocation('/');
+      
+      window.location.href = '#/main';
+      
     } else {
       setErrors(validationResult.errors);
     }
@@ -64,17 +63,17 @@ const LogInPage = () => {
 
         <form className="signup-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email" className="sr-only">Email address or username</label>
+            <label htmlFor="identifier" className="sr-only">Email address or username</label>
             <input
-              id="email"
-              name="email"
-              type="email"
+              id="identifier"
+              name="identifier"
+              type="identifier"
               value={formData.identifier}
               onChange={handleChange}
-              className={`form-input ${errors.email ? 'input-error' : ''}`}
+              className={`form-input ${errors.identifier ? 'input-error' : ''}`}
               placeholder="Email address or username"
             />
-            {errors.email && <p className="error-text">{errors.email}</p>}
+            {errors.identifier && <p className="error-text">{errors.identifier}</p>}
           </div>
 
           <div className="form-group">

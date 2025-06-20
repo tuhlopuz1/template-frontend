@@ -23,9 +23,9 @@ export const validateSignup = (data) => {
     }
     
     // Terms acceptance
-    if (!data.termsAccepted) {
-      errors.termsAccepted = 'You must accept the terms of service';
-    }
+    // if (!data.termsAccepted) {
+    //   errors.termsAccepted = 'You must accept the terms of service';
+    // }
     
     return {
       isValid: Object.keys(errors).length === 0,

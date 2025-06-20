@@ -2,7 +2,9 @@ import Sidebar from "./components/Sidebar";
 
 function MainPage() {
     return (
-        <Sidebar></Sidebar>
+        <div className="main-page">
+            <Sidebar></Sidebar>
+        </div>
     )
 }
 

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation } from 'wouter';
 import { Link } from 'react-router-dom';
 import Logo from './components/Logo';
 import { validateSignup } from './components/validation';
@@ -8,7 +7,7 @@ import Navbar from './components/NavBar';
 
 
 const SignupPage = () => {
-  const [, setLocation] = useLocation();
+  
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -29,11 +28,12 @@ const SignupPage = () => {
     e.preventDefault();
 
     const validationResult = validateSignup(formData);
-
+    console.log(validationResult)
     if (validationResult.isValid) {
       console.log('Signup successful!', formData);
-      alert('Signup successful! Welcome to AppName!');
-      setLocation('/');
+      
+      window.location.href = '#/main';
+      
     } else {
       setErrors(validationResult.errors);
     }
