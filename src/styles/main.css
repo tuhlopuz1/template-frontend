@@ -3,13 +3,13 @@
 /* Основной layout */
 .main-layout {
   display: flex;
-  height: 100vh; /* Стабильно на десктопе */
+  height: 100dvh; /* Стабильно на десктопе */
   overflow: hidden;
 }
 
 /* Видео секция */
 .video-section {
-  width: 55vh;
+  width: 55dvh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,8 +19,8 @@
 }
 
 .video-container {
-  width: 55vh;
-  height: 97vh;
+  width: 55dvh;
+  height: 97dvh;
   overflow: hidden;
   border-radius: 12px;
   padding-right: 100px;
@@ -29,7 +29,7 @@
 
 .main-video {
   width: 100%;
-  height: 97vh;
+  height: 97dvh;
   object-fit: contain;
   border-radius: 12px;
   background-color: black;
@@ -63,7 +63,7 @@
   width: 25%;
   background-color: #fff;
   padding: 16px;
-  height: 100vh;
+  height: 100dvh;
   overflow-y: auto;
   border-left: 1px solid #e5e7eb;
   transform: translateX(100%);
@@ -102,7 +102,7 @@
   align-items: center;
   transition: padding-right 0.3s ease;
   position: relative;
-  height: 100vh;
+  height: 100dvh;
 }
 
 .content-area.with-comments {
@@ -110,7 +110,7 @@
 }
 
 .video-scroll-container {
-  height: 100vh;
+  height: 100dvh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   -webkit-overflow-scrolling: touch;
@@ -118,7 +118,7 @@
 
 .video-wrapper {
   scroll-snap-align: start;
-  height: 100vh;
+  height: 100dvh;
   position: relative;
   display: flex;
   justify-content: center;
