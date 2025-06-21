@@ -1,7 +1,7 @@
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
 import './styles/main.css';
-import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX } from "react-icons/fi";
+import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2 } from "react-icons/fi";
 function MainPage() {
   const [showComments, setShowComments] = useState(false);
 
@@ -18,7 +18,7 @@ function MainPage() {
       <div className="video-container">
         <video
           className="main-video"
-          src="https://assets.codepen.io/3364143/screen-record.mp4"
+          src="https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/c3e5bef3-7f01-41cf-ad8e-1a9de74fdc6e.mp4"
           controls
           playsInline
         />
@@ -28,6 +28,7 @@ function MainPage() {
         <button className="action-btn like"><FiThumbsUp /></button>
         <button className="action-btn dislike"><FiThumbsDown /></button>
         <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={22} /></button>
+        <button className="action-btn share"><FiShare2 /></button>
       </div>
     </div>
 
