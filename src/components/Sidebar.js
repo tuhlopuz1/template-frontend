@@ -1,17 +1,19 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'wouter';
-import { FiUser, FiGrid, FiSearch, FiSettings, FiMenu, FiX } from 'react-icons/fi';
+import { Link  } from 'react-router-dom';
+import { FiUser, FiUsers, FiSearch, FiSettings, FiMenu, FiX, FiStar } from 'react-icons/fi';
 import '../styles/sidebar.css';
 
 const Sidebar = () => {
-  const [location] = useLocation();
+  
   const [isOpen, setIsOpen] = useState(false);
-
+  
+  console.log(window.location.hash)
   const menuItems = [
-    { path: '/profile', icon: <FiUser size={20} />, label: 'Профиль' },
-    { path: '/profile/dashboard', icon: <FiGrid size={20} />, label: 'Дашборд' },
-    { path: '/profile/search', icon: <FiSearch size={20} />, label: 'Поиск' },
-    { path: '/profile/settings', icon: <FiSettings size={20} />, label: 'Настройки' },
+    { path: '/main', icon: <FiStar size={20} />, label: 'For you' },
+    { path: '/profile/dashboard', icon: <FiUsers size={20} />, label: 'Following' },
+    { path: '/profile', icon: <FiUser size={20} />, label: 'Profile' },
+    { path: '/profile/search', icon: <FiSearch size={20} />, label: 'Search' },
+    { path: '/profile/settings', icon: <FiSettings size={20} />, label: 'Settings' },
   ];
 
   const toggleSidebar = () => {
@@ -63,8 +65,8 @@ const Sidebar = () => {
               {menuItems.map((item) => (
                 <li key={item.path}>
                   <Link 
-                    href={item.path}
-                    className={`menu-item ${location === item.path ? 'active' : ''}`}
+                    to={item.path}
+                    className={`menu-item ${window.location.hash === '#'+item.path ? 'active' : ''}`}
                   >
                     <span className="menu-icon">{item.icon}</span>
                     {item.label}

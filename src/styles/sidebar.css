@@ -51,7 +51,7 @@
   
   .sidebar-content {
     padding: 20px;
-    height: 100%;
+    
     display: flex;
     flex-direction: column;
   }
@@ -72,6 +72,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -154,7 +155,7 @@
 
   
   /* Responsive styles */
-  @media (max-width: 768px) {
+  @media (orientation: portrait) {
     .mobile-menu-button {
       display: block;
     }
@@ -169,7 +170,7 @@
     }
   }
   
-  @media (min-width: 769px) {
+  @media (orientation: landscape) {
     .sidebar {
       position: sticky;
       transform: translateX(0);
