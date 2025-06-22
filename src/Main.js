@@ -7,7 +7,8 @@ import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2 } from "react-
 const fetchNextVideo = async (index) => {
   await new Promise((resolve) => setTimeout(resolve, 300)); // задержка 1.5 сек
   const urls = [
-    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/c3e5bef3-7f01-41cf-ad8e-1a9de74fdc6e.mp4",
+  
+    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/f7d70535-c36e-49bc-9639-6ba241d88352.mp4",
     "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1d00e5fb-3cb0-4e41-93a6-103899ef723a.mp4",
     // Добавь больше ссылок или API
   ];
