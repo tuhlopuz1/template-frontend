@@ -118,6 +118,7 @@
 
 .video-wrapper {
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   height: 100dvh;
   position: relative;
   display: flex;
