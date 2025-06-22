@@ -52,12 +52,12 @@
 .stat-amount {
   margin: 0;
   margin-bottom: 20px;
-  color: black;
+  color: #4b5563;
   font-weight: bold;
 }
 
 .action-btn {
-  color: black;
+  color: #4b5563;
   background: none;
   border: none;
   /* padding: 12px; */
