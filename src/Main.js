@@ -9,6 +9,7 @@ const fetchNextVideo = async (index) => {
   const urls = [
     "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/f7d70535-c36e-49bc-9639-6ba241d88352.mp4",
     "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1d00e5fb-3cb0-4e41-93a6-103899ef723a.mp4",
+    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1acebe6c-4c4e-42c2-b40c-174b4abd578a.mp4"
   ];
   return urls[index % urls.length];
 };
@@ -44,10 +45,10 @@ function MainPage() {
     isLoadingRef.current = false;
 
     // Закрытие комментариев на десктопе (ландшафт)
-    if (window.matchMedia('(orientation: landscape)').matches && showComments) {
-      setShowComments(false);
-    }
-  }, [showComments]);
+    // if (window.matchMedia('(orientation: landscape)').matches && showComments) {
+    //   setShowComments(false);
+    // }
+  }, []);
 
   useEffect(() => {
     loadNextVideo();
@@ -119,12 +120,12 @@ function MainPage() {
 
         <div className={`comment-section ${showComments ? 'open' : ''}`}>
           <div className="comments-header">
-            <h3>Комментарии</h3>
+            <h3>251 Comments</h3>
             <button className="close-comments-btn" onClick={toggleComments}><FiX size={20} /></button>
           </div>
           <div className="comments-content">
-            {[...Array(250)].map((_, i) => (
-              <p key={i}>Комментарий {i + 1}</p>
+            {[...Array(251)].map((_, i) => (
+              <p key={i}>Comment {i + 1}</p>
             ))}
           </div>
         </div>
