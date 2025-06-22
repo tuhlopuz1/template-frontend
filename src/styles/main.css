@@ -265,6 +265,7 @@
 
   .stat-amount {
     color: white;
+    filter: drop-shadow(1px 1px 2px black);
   }
 
   .comment-section {
@@ -298,4 +299,8 @@
   .loading-placeholder {
     border-radius: 0;
   }
+  .action-btn svg {
+    filter: drop-shadow(1px 1px 2px black);
+  }
+
 }

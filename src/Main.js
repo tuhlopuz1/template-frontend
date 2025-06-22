@@ -9,7 +9,8 @@ const fetchNextVideo = async (index) => {
   const urls = [
     "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/f7d70535-c36e-49bc-9639-6ba241d88352.mp4",
     "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1d00e5fb-3cb0-4e41-93a6-103899ef723a.mp4",
-    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1acebe6c-4c4e-42c2-b40c-174b4abd578a.mp4"
+    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1acebe6c-4c4e-42c2-b40c-174b4abd578a.mp4",
+    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/75de50bc-7414-4d47-960e-0662f1bde577.mp4"
   ];
   return urls[index % urls.length];
 };
@@ -127,7 +128,7 @@ function MainPage() {
         <div className={`comment-section ${showComments ? 'open' : ''}`}>
           <div className="comments-header">
             <h3>251 Comments</h3>
-            <button className="close-comments-btn" onClick={toggleComments}><FiX size={20} /></button>
+            <button className="close-comments-btn" onClick={toggleComments}><FiX size={25} /></button>
           </div>
           <div className="comments-content">
             {[...Array(251)].map((_, i) => (
