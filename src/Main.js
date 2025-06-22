@@ -72,6 +72,8 @@ function MainPage() {
 
   const isPortrait = window.matchMedia('(orientation: portrait)').matches;
 
+  const actionBtnSize = 30;
+
   return (
     <div className="main-layout">
       <Sidebar />
@@ -108,10 +110,14 @@ function MainPage() {
                 </div>
 
                 <div className="action-buttons">
-                  <button className="action-btn like"><FiThumbsUp /></button>
-                  <button className="action-btn dislike"><FiThumbsDown /></button>
-                  <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={22} /></button>
-                  <button className="action-btn share"><FiShare2 /></button>
+                  <button className="action-btn like"><FiThumbsUp size={actionBtnSize} /></button>
+                  <p className="stat-amount">123</p>
+                  <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize}/></button>
+                  <p className="stat-amount">123</p>
+                  <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
+                  <p className="stat-amount">123</p>
+                  <button className="action-btn share"><FiShare2 size={actionBtnSize} /></button>
+                  <p className="stat-amount">123</p>
                 </div>
               </div>
             );
