@@ -161,6 +161,38 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Фикс заголовка в комментариях */
+.comments-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  
+}
+
+/* Оверлей, чтобы клики вне закрывали комментарии */
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 50dvh;
+  background: rgba(0, 0, 0, 0);
+  z-index: 14;
+}
+
+/* Блокировка прокрутки видео при открытых комментариях на мобилке */
+.video-scroll-container.lock-scroll {
+  overflow: hidden;
+}
+
+
 
 /* ========== Mobile адаптив ========== */
 @media (orientation: portrait) {
@@ -173,6 +205,15 @@
   .content-area.with-comments {
     padding-right: 0;
   }
+
+  .video-scroll-container {
+    width: 100%;
+  }
+
+  .close-comments-btn {
+    margin-right: 5%;
+  }
+
   .video-section {
     padding: 0;
     margin: 0;
@@ -213,7 +254,7 @@
     left: 0;
     right: 0;
     height: 50dvh;
-    width: 90%;
+    width: 100%;
     background-color: #fff;
     border-top: 1px solid #ddd;
 
@@ -224,5 +265,18 @@
 
   .comment-section.open {
     transform: translateY(0);
+  }
+
+  .comments-content {
+    font-size: 14px;
+    color: #333;
+
+    /* Новые строки ↓ */
+    max-height: calc(50dvh - 48px); /* 50dvh (высота блока) минус примерная высота header */
+    overflow-y: auto;
+  }
+
+  .loading-placeholder {
+    border-radius: 0;
   }
 }

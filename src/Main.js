@@ -5,55 +5,53 @@ import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2 } from "react-
 
 // Фейковая функция, имитирующая подгрузку с сервера
 const fetchNextVideo = async (index) => {
-  await new Promise((resolve) => setTimeout(resolve, 300)); // задержка 1.5 сек
+  await new Promise((resolve) => setTimeout(resolve, 300));
   const urls = [
-  
     "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/f7d70535-c36e-49bc-9639-6ba241d88352.mp4",
     "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1d00e5fb-3cb0-4e41-93a6-103899ef723a.mp4",
-    // Добавь больше ссылок или API
   ];
   return urls[index % urls.length];
 };
 
 function MainPage() {
   const [showComments, setShowComments] = useState(false);
-  const [videos, setVideos] = useState([null]); // null = лоадер
+  const [videos, setVideos] = useState([null]);
   const observer = useRef(null);
 
   const toggleComments = () => {
-    setShowComments(!showComments);
+    setShowComments((prev) => !prev);
   };
-  
-const nextIndexRef = useRef(0); // отслеживаем индекс отдельно
-const isLoadingRef = useRef(false); // предотвращаем дубли
 
-const loadNextVideo = useCallback(async () => {
-  if (isLoadingRef.current) return;
+  const nextIndexRef = useRef(0);
+  const isLoadingRef = useRef(false);
 
-  isLoadingRef.current = true;
+  const loadNextVideo = useCallback(async () => {
+    if (isLoadingRef.current) return;
 
-  // Сначала вставим null (лоадер)
-  setVideos((prev) => [...prev, null]);
+    isLoadingRef.current = true;
 
-  const index = nextIndexRef.current;
-  const nextVideo = await fetchNextVideo(index);
+    setVideos((prev) => [...prev, null]);
+    const index = nextIndexRef.current;
+    const nextVideo = await fetchNextVideo(index);
 
-  setVideos((prev) => {
-    const updated = [...prev];
-    updated[index] = nextVideo;
-    return updated;
-  });
+    setVideos((prev) => {
+      const updated = [...prev];
+      updated[index] = nextVideo;
+      return updated;
+    });
 
-  nextIndexRef.current += 1;
-  isLoadingRef.current = false;
-}, []);
+    nextIndexRef.current += 1;
+    isLoadingRef.current = false;
 
+    // Закрытие комментариев на десктопе (ландшафт)
+    if (window.matchMedia('(orientation: landscape)').matches && showComments) {
+      setShowComments(false);
+    }
+  }, [showComments]);
 
-  
-    useEffect(() => {
-      loadNextVideo(); // загрузка первого видео
-    }, [loadNextVideo]);
-
+  useEffect(() => {
+    loadNextVideo();
+  }, [loadNextVideo]);
 
   const lastVideoRef = useCallback(
     (node) => {
@@ -71,12 +69,19 @@ const loadNextVideo = useCallback(async () => {
     [loadNextVideo]
   );
 
+  const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+
   return (
     <div className="main-layout">
       <Sidebar />
 
       <div className={`content-area ${showComments ? 'with-comments' : ''}`}>
-        <div className="video-scroll-container no-scrollbar">
+        {/* Мобильный оверлей для закрытия */}
+        {showComments && isPortrait && (
+          <div className="mobile-overlay" onClick={toggleComments}></div>
+        )}
+
+        <div className={`video-scroll-container no-scrollbar ${showComments && isPortrait ? 'lock-scroll' : ''}`}>
           {videos.map((videoSrc, index) => {
             const isLast = index === videos.length - 1;
 
@@ -118,8 +123,9 @@ const loadNextVideo = useCallback(async () => {
             <button className="close-comments-btn" onClick={toggleComments}><FiX size={20} /></button>
           </div>
           <div className="comments-content">
-            <p>Комментарий 1</p>
-            <p>Комментарий 2</p>
+            {[...Array(250)].map((_, i) => (
+              <p key={i}>Комментарий {i + 1}</p>
+            ))}
           </div>
         </div>
       </div>
