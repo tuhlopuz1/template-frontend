@@ -52,10 +52,12 @@
 .stat-amount {
   margin: 0;
   margin-bottom: 20px;
+  color: black;
+  font-weight: bold;
 }
 
 .action-btn {
-  color: white;
+  color: black;
   background: none;
   border: none;
   /* padding: 12px; */
@@ -193,7 +195,7 @@
   right: 0;
   bottom: 50dvh;
   background: rgba(0, 0, 0, 0);
-  z-index: 14;
+  z-index: 25;
 }
 
 /* Блокировка прокрутки видео при открытых комментариях на мобилке */
@@ -255,6 +257,14 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
+  }
+
+  .action-btn {
+    color: white;
+  }
+
+  .stat-amount {
+    color: white;
   }
 
   .comment-section {
