@@ -7,7 +7,7 @@ const Sidebar = () => {
   
   const [isOpen, setIsOpen] = useState(false);
   
-  console.log(window.location.hash)
+  
   const menuItems = [
     { path: '/main', icon: <FiStar size={20} />, label: 'For you' },
     { path: '/profile/dashboard', icon: <FiUsers size={20} />, label: 'Following' },

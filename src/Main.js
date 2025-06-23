@@ -43,7 +43,19 @@ const fetchNextVideo = async (index) => {
       shares: 45,
       isSubscribed: false,
       userReaction: null
-    }
+    },
+    {
+      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/dc674a61-1e68-4abc-aee3-14ecfd3dd32e.mp4",
+      description: "Третье видео про путешествия.",
+      author: "user_three",
+      avatar: "https://randomuser.me/api/portraits/men/3.jpg",
+      likes: 789,
+      dislikes: 5,
+      comments: 150,
+      shares: 45,
+      isSubscribed: false,
+      userReaction: null
+    },
     // Добавляй сколько хочешь
   ];
 
@@ -101,7 +113,8 @@ function MainPage() {
   );
 
   const isPortrait = window.matchMedia('(orientation: portrait)').matches;
-  
+
+
   return (
     <div className="main-layout">
       <Sidebar />
@@ -113,11 +126,11 @@ function MainPage() {
         <div className={`video-scroll-container no-scrollbar ${showComments && isPortrait ? 'lock-scroll' : ''}`}>
           {videos.map((video, index) => {
             const isLast = index === videos.length - 1;
-            
+
             return (
               <div className="video-wrapper" key={index} ref={isLast ? lastVideoRef : null}>
                 {video ? (
-                  <CustomVideoPlayer video={video} />
+                  <CustomVideoPlayer video={video} toggleComments={toggleComments} />
                 ) : (
                   <div className="loading-placeholder">
                     <div className="loader" />
@@ -145,15 +158,15 @@ function MainPage() {
 }
 
 // ======= Кастомный плеер =======
-function CustomVideoPlayer({ video }) {
+function CustomVideoPlayer({ video, toggleComments }) {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  
+  const actionBtnSize = 30;
   const togglePlay = () => {
     if (!videoRef.current) return;
-    
+
     if (videoRef.current.paused) {
       videoRef.current.play();
       setIsPlaying(true);
@@ -162,36 +175,35 @@ function CustomVideoPlayer({ video }) {
       setIsPlaying(false);
     }
   };
-  
+
   const handleDoubleClick = () => {
     console.log('Double click - Like animation!');
     // Тут можешь добавить анимацию лайка
   };
-  
+
   const handleTimeUpdate = () => {
     if (videoRef.current) {
       setCurrentTime(videoRef.current.currentTime);
     }
   };
-  
+
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
       setDuration(videoRef.current.duration);
     }
   };
-  
+
   const handleSeek = (e) => {
     if (!videoRef.current) return;
-    
+
     const progressBar = e.target.getBoundingClientRect();
     const clickX = e.clientX - progressBar.left;
     const newTime = (clickX / progressBar.width) * duration;
-    
+
     videoRef.current.currentTime = newTime;
     setCurrentTime(newTime);
   };
-  const actionBtnSize = 30;
-  
+
   return (
     <>
       <div className="video-container" onClick={togglePlay} onDoubleClick={handleDoubleClick}>
@@ -216,9 +228,9 @@ function CustomVideoPlayer({ video }) {
         <p className="stat-amount">{video.likes}</p>
         <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize} /></button>
         <p className="stat-amount">{video.dislikes}</p>
-        <button className="action-btn comment-toggle"><FiMessageCircle size={actionBtnSize} /></button>
+        <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
         <p className="stat-amount">{video.comments}</p>
-        <button className="action-btn share"><FiShare2 size={actionBtnSize} /></button>
+        <button className="action-btn share" ><FiShare2 size={actionBtnSize} /></button>
         <p className="stat-amount">{video.shares}</p>
       </div>
 
