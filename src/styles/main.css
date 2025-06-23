@@ -206,14 +206,23 @@
 .video-info-bar {
   position: absolute;
   bottom: 20px;
-  left: 20px;
+  left: 0px;
+  width: 49dvh;
   right: 20px;
   display: flex;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.5);
+  /* align-items: start; */
+  flex-direction: column;
+  /* background: rgba(0, 0, 0, 0.3); */
   border-radius: 12px;
-  padding: 12px;
+  padding: 3dvh;
   color: white;
+}
+
+.video-info-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .author-avatar {
@@ -234,13 +243,13 @@
 }
 
 .video-description {
-  margin: 4px 0 0 0;
+  margin: 4px 4px 0 0;
   font-size: 14px;
 }
 
 .subscribe-btn {
-  background-color: #ef4444;
-  color: white;
+  background-color: white;
+  color: black;
   border: none;
   border-radius: 20px;
   padding: 8px 16px;
@@ -248,15 +257,8 @@
   font-size: 14px;
 }
 
-.subscribe-btn:hover {
-  background-color: #dc2626;
-}
 
-@media (orientation: portrait) {
-  .video-info-bar {
-    bottom: 80px; /* чуть выше, чтобы не мешать комментариям на мобилке */
-  }
-}
+
 
 
 /* ========== Mobile адаптив ========== */
@@ -355,6 +357,11 @@
   }
   .action-btn svg {
     filter: drop-shadow(1px 1px 2px black);
+  }
+
+  .video-info-bar {
+    width: 90%;
+    padding: 5%;
   }
 
 }

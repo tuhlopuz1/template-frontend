@@ -6,7 +6,8 @@
     align-items: center;
     min-height: 100vh;
     background-color: #f9f9f9;
-    background-image: url(https://cdn.deepseek.com/blog/banner-background.webp);
+    /* background-image: url(https://cdn.deepseek.com/blog/banner-background.webp); */
+    background-image: url(../../public/banner-background.webp);
     background-repeat: no-repeat;
     background-size: cover; 
     background-position: center; 

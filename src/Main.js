@@ -22,7 +22,7 @@ const fetchNextVideo = async (index) => {
     },
     {
       url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1d00e5fb-3cb0-4e41-93a6-103899ef723a.mp4",
-      description: "Второе видео, наслаждайтесь просмотром!",
+      description: "Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!",
       author: "user_two",
       avatar: "https://randomuser.me/api/portraits/women/2.jpg",
       likes: 456,
@@ -159,17 +159,19 @@ function MainPage() {
                       <p className="stat-amount">{video.shares}</p>
                     </div>
 
-                    {/* Нижняя панель с информацией о видео */}
-                    <div className="video-info-bar">
-                      <img src={video.avatar} alt={video.author} className="author-avatar" />
-                      <div className="video-info-text">
-                        <p className="author-nickname">@{video.author}</p>
+                    {/* Нижняя панель с информацией о видео */} 
+                      <div className="video-info-bar">
+                        <div className="video-info-header">
+                          <img src={video.avatar} alt={video.author} className="author-avatar" />
+                          <p className="author-nickname">@{video.author}</p>
+                          <button
+                            className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}
+                          >
+                            {video.isSubscribed ? "Отписаться" : "Подписаться"}
+                          </button>
+                        </div>
                         <p className="video-description">{video.description}</p>
                       </div>
-                      <button className="subscribe-btn">
-                        {video.isSubscribed ? "Отписаться" : "Подписаться"}
-                      </button>
-                    </div>
                   </>
                 )}
               </div>

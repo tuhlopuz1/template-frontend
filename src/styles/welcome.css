@@ -23,6 +23,8 @@ body {
     padding: 5rem 1rem;
     text-align: center;
     background-image: url(https://cdn.deepseek.com/blog/banner-background.webp);
+    background-image: url(../../public/banner-background.webp);
+
     background-repeat: no-repeat; /* Убираем повторение изображения */
     background-size: cover; /* Растягиваем изображение, чтобы оно заполнило весь элемент */
     background-position: center; /* Центрируем изображение */
