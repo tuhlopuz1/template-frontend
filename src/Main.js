@@ -55,19 +55,17 @@ function MainPage() {
   const [showComments, setShowComments] = useState(false);
   const [videos, setVideos] = useState([null]);
   const observer = useRef(null);
+  const nextIndexRef = useRef(0);
+  const isLoadingRef = useRef(false);
 
   const toggleComments = () => {
     setShowComments((prev) => !prev);
   };
 
-  const nextIndexRef = useRef(0);
-  const isLoadingRef = useRef(false);
-
   const loadNextVideo = useCallback(async () => {
     if (isLoadingRef.current) return;
 
     isLoadingRef.current = true;
-
     setVideos((prev) => [...prev, null]);
     const index = nextIndexRef.current;
     const nextVideo = await fetchNextVideo(index);
@@ -80,11 +78,6 @@ function MainPage() {
 
     nextIndexRef.current += 1;
     isLoadingRef.current = false;
-
-    // Закрытие комментариев на десктопе (ландшафт)
-    // if (window.matchMedia('(orientation: landscape)').matches && showComments) {
-    //   setShowComments(false);
-    // }
   }, []);
 
   useEffect(() => {
@@ -108,15 +101,11 @@ function MainPage() {
   );
 
   const isPortrait = window.matchMedia('(orientation: portrait)').matches;
-
-  const actionBtnSize = 30;
-
+  
   return (
     <div className="main-layout">
       <Sidebar />
-
       <div className={`content-area ${showComments ? 'with-comments' : ''}`}>
-        {/* Мобильный оверлей для закрытия */}
         {showComments && isPortrait && (
           <div className="mobile-overlay" onClick={toggleComments}></div>
         )}
@@ -124,60 +113,19 @@ function MainPage() {
         <div className={`video-scroll-container no-scrollbar ${showComments && isPortrait ? 'lock-scroll' : ''}`}>
           {videos.map((video, index) => {
             const isLast = index === videos.length - 1;
-
+            
             return (
-              <div
-                className="video-wrapper"
-                key={index}
-                ref={isLast ? lastVideoRef : null}
-              >
-                <div className="video-container">
-                  {video ? (
-                    <video
-                      className="main-video"
-                      src={video.url}
-                      controls
-                      playsInline
-                    />
-                  ) : (
-                    <div className="loading-placeholder">
-                      <div className="loader" />
-                    </div>
-                  )}
-                </div>
-
-                {video && (
-                  <>
-                    <div className="action-buttons">
-                      <button className="action-btn like"><FiThumbsUp size={actionBtnSize} /></button>
-                      <p className="stat-amount">{video.likes}</p>
-                      <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize} /></button>
-                      <p className="stat-amount">{video.dislikes}</p>
-                      <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
-                      <p className="stat-amount">{video.comments}</p>
-                      <button className="action-btn share"><FiShare2 size={actionBtnSize} /></button>
-                      <p className="stat-amount">{video.shares}</p>
-                    </div>
-
-                    {/* Нижняя панель с информацией о видео */} 
-                      <div className="video-info-bar">
-                        <div className="video-info-header">
-                          <img src={video.avatar} alt={video.author} className="author-avatar" />
-                          <p className="author-nickname">@{video.author}</p>
-                          <button
-                            className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}
-                          >
-                            {video.isSubscribed ? "Отписаться" : "Подписаться"}
-                          </button>
-                        </div>
-                        <p className="video-description">{video.description}</p>
-                      </div>
-                  </>
+              <div className="video-wrapper" key={index} ref={isLast ? lastVideoRef : null}>
+                {video ? (
+                  <CustomVideoPlayer video={video} />
+                ) : (
+                  <div className="loading-placeholder">
+                    <div className="loader" />
+                  </div>
                 )}
               </div>
             );
           })}
-
         </div>
 
         <div className={`comment-section ${showComments ? 'open' : ''}`}>
@@ -193,6 +141,98 @@ function MainPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// ======= Кастомный плеер =======
+function CustomVideoPlayer({ video }) {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  
+  const togglePlay = () => {
+    if (!videoRef.current) return;
+    
+    if (videoRef.current.paused) {
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+  
+  const handleDoubleClick = () => {
+    console.log('Double click - Like animation!');
+    // Тут можешь добавить анимацию лайка
+  };
+  
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+  
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+    }
+  };
+  
+  const handleSeek = (e) => {
+    if (!videoRef.current) return;
+    
+    const progressBar = e.target.getBoundingClientRect();
+    const clickX = e.clientX - progressBar.left;
+    const newTime = (clickX / progressBar.width) * duration;
+    
+    videoRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+  const actionBtnSize = 30;
+  
+  return (
+    <>
+      <div className="video-container" onClick={togglePlay} onDoubleClick={handleDoubleClick}>
+        <video
+          className="main-video"
+          src={video.url}
+          ref={videoRef}
+          playsInline
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+        />
+        <div className="custom-progress-bar" onClick={handleSeek}>
+          <div
+            className="custom-progress"
+            style={{ width: `${(currentTime / duration) * 100}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="action-buttons">
+        <button className="action-btn like"><FiThumbsUp size={actionBtnSize} /></button>
+        <p className="stat-amount">{video.likes}</p>
+        <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize} /></button>
+        <p className="stat-amount">{video.dislikes}</p>
+        <button className="action-btn comment-toggle"><FiMessageCircle size={actionBtnSize} /></button>
+        <p className="stat-amount">{video.comments}</p>
+        <button className="action-btn share"><FiShare2 size={actionBtnSize} /></button>
+        <p className="stat-amount">{video.shares}</p>
+      </div>
+
+      <div className="video-info-bar">
+        <div className="video-info-header">
+          <img src={video.avatar} alt={video.author} className="author-avatar" />
+          <p className="author-nickname">@{video.author}</p>
+          <button className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}>
+            {video.isSubscribed ? "Отписаться" : "Подписаться"}
+          </button>
+        </div>
+        <p className="video-description">{video.description}</p>
+      </div>
+    </>
   );
 }
 
