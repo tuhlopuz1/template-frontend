@@ -3,17 +3,53 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import './styles/main.css';
 import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2 } from "react-icons/fi";
 
-// Фейковая функция, имитирующая подгрузку с сервера
+// Фейковая функция, имитирующая подгрузку с сервера с данными
 const fetchNextVideo = async (index) => {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  const urls = [
-    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/f7d70535-c36e-49bc-9639-6ba241d88352.mp4",
-    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1d00e5fb-3cb0-4e41-93a6-103899ef723a.mp4",
-    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1acebe6c-4c4e-42c2-b40c-174b4abd578a.mp4",
-    "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/75de50bc-7414-4d47-960e-0662f1bde577.mp4"
+
+  const videosData = [
+    {
+      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/f7d70535-c36e-49bc-9639-6ba241d88352.mp4",
+      description: "Это первое видео. Оно очень интересное!",
+      author: "user_one",
+      avatar: "https://randomuser.me/api/portraits/men/1.jpg",
+      likes: 123,
+      dislikes: 10,
+      comments: 251,
+      shares: 15,
+      isSubscribed: false,
+      userReaction: null // "like" | "dislike" | null
+    },
+    {
+      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1d00e5fb-3cb0-4e41-93a6-103899ef723a.mp4",
+      description: "Второе видео, наслаждайтесь просмотром!",
+      author: "user_two",
+      avatar: "https://randomuser.me/api/portraits/women/2.jpg",
+      likes: 456,
+      dislikes: 25,
+      comments: 89,
+      shares: 30,
+      isSubscribed: true,
+      userReaction: "like"
+    },
+    {
+      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/public/videos/string/1acebe6c-4c4e-42c2-b40c-174b4abd578a.mp4",
+      description: "Третье видео про путешествия.",
+      author: "user_three",
+      avatar: "https://randomuser.me/api/portraits/men/3.jpg",
+      likes: 789,
+      dislikes: 5,
+      comments: 150,
+      shares: 45,
+      isSubscribed: false,
+      userReaction: null
+    }
+    // Добавляй сколько хочешь
   ];
-  return urls[index % urls.length];
+
+  return videosData[index % videosData.length];
 };
+
 
 function MainPage() {
   const [showComments, setShowComments] = useState(false);
@@ -86,7 +122,7 @@ function MainPage() {
         )}
 
         <div className={`video-scroll-container no-scrollbar ${showComments && isPortrait ? 'lock-scroll' : ''}`}>
-          {videos.map((videoSrc, index) => {
+          {videos.map((video, index) => {
             const isLast = index === videos.length - 1;
 
             return (
@@ -96,10 +132,10 @@ function MainPage() {
                 ref={isLast ? lastVideoRef : null}
               >
                 <div className="video-container">
-                  {videoSrc ? (
+                  {video ? (
                     <video
                       className="main-video"
-                      src={videoSrc}
+                      src={video.url}
                       controls
                       playsInline
                     />
@@ -110,19 +146,36 @@ function MainPage() {
                   )}
                 </div>
 
-                <div className="action-buttons">
-                  <button className="action-btn like"><FiThumbsUp size={actionBtnSize} /></button>
-                  <p className="stat-amount">123</p>
-                  <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize}/></button>
-                  <p className="stat-amount">123</p>
-                  <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
-                  <p className="stat-amount">123</p>
-                  <button className="action-btn share"><FiShare2 size={actionBtnSize} /></button>
-                  <p className="stat-amount">123</p>
-                </div>
+                {video && (
+                  <>
+                    <div className="action-buttons">
+                      <button className="action-btn like"><FiThumbsUp size={actionBtnSize} /></button>
+                      <p className="stat-amount">{video.likes}</p>
+                      <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize} /></button>
+                      <p className="stat-amount">{video.dislikes}</p>
+                      <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
+                      <p className="stat-amount">{video.comments}</p>
+                      <button className="action-btn share"><FiShare2 size={actionBtnSize} /></button>
+                      <p className="stat-amount">{video.shares}</p>
+                    </div>
+
+                    {/* Нижняя панель с информацией о видео */}
+                    <div className="video-info-bar">
+                      <img src={video.avatar} alt={video.author} className="author-avatar" />
+                      <div className="video-info-text">
+                        <p className="author-nickname">@{video.author}</p>
+                        <p className="video-description">{video.description}</p>
+                      </div>
+                      <button className="subscribe-btn">
+                        {video.isSubscribed ? "Отписаться" : "Подписаться"}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             );
           })}
+
         </div>
 
         <div className={`comment-section ${showComments ? 'open' : ''}`}>

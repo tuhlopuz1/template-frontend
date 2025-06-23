@@ -203,6 +203,60 @@
   overflow: hidden;
 }
 
+.video-info-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 12px;
+  color: white;
+}
+
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.video-info-text {
+  flex: 1;
+}
+
+.author-nickname {
+  font-weight: bold;
+  margin: 0;
+}
+
+.video-description {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+}
+
+.subscribe-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.subscribe-btn:hover {
+  background-color: #dc2626;
+}
+
+@media (orientation: portrait) {
+  .video-info-bar {
+    bottom: 80px; /* чуть выше, чтобы не мешать комментариям на мобилке */
+  }
+}
 
 
 /* ========== Mobile адаптив ========== */
