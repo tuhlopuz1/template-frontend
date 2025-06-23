@@ -2,6 +2,7 @@ import Sidebar from "./components/Sidebar";
 import { useState, useEffect, useRef, useCallback } from "react";
 import './styles/main.css';
 import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2 } from "react-icons/fi";
+import CustomVideoPlayer from "./components/CustomVideoPlayer";
 
 // Фейковая функция, имитирующая подгрузку с сервера с данными
 const fetchNextVideo = async (index) => {
@@ -169,95 +170,6 @@ function MainPage() {
   );
 }
 
-// ======= Кастомный плеер =======
-function CustomVideoPlayer({ video, toggleComments }) {
-  const videoRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const actionBtnSize = 30;
-  const togglePlay = () => {
-    if (!videoRef.current) return;
 
-    if (videoRef.current.paused) {
-      videoRef.current.play();
-      setIsPlaying(true);
-    } else {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  const handleDoubleClick = () => {
-    console.log('Double click - Like animation!');
-    // Тут можешь добавить анимацию лайка
-  };
-
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime);
-    }
-  };
-
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setDuration(videoRef.current.duration);
-    }
-  };
-
-  const handleSeek = (e) => {
-    if (!videoRef.current) return;
-
-    const progressBar = e.target.getBoundingClientRect();
-    const clickX = e.clientX - progressBar.left;
-    const newTime = (clickX / progressBar.width) * duration;
-
-    videoRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
-  };
-
-  return (
-    <>
-      <div className="video-container" onClick={togglePlay} onDoubleClick={handleDoubleClick}>
-        <video
-          className="main-video"
-          src={video.url}
-          ref={videoRef}
-          playsInline
-          onTimeUpdate={handleTimeUpdate}
-          onLoadedMetadata={handleLoadedMetadata}
-        />
-        <div className="custom-progress-bar" onClick={handleSeek}>
-          <div
-            className="custom-progress"
-            style={{ width: `${(currentTime / duration) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      <div className="action-buttons">
-        <button className="action-btn like"><FiThumbsUp size={actionBtnSize} /></button>
-        <p className="stat-amount">{video.likes}</p>
-        <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize} /></button>
-        <p className="stat-amount">{video.dislikes}</p>
-        <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
-        <p className="stat-amount">{video.comments}</p>
-        <button className="action-btn share" ><FiShare2 size={actionBtnSize} /></button>
-        <p className="stat-amount">{video.shares}</p>
-      </div>
-
-      <div className="video-info-bar">
-        <div className="video-info-header">
-          <img src={video.avatar} alt={video.author} className="author-avatar" />
-          <p className="author-nickname">@{video.author}</p>
-          <button className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}>
-            {video.isSubscribed ? "Unfollow" : "Follow"}
-          </button>
-        </div>
-        <p className="video-description">{video.description}</p>
-      </div>
-    </>
-  );
-}
 
 export default MainPage;
