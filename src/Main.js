@@ -53,7 +53,7 @@ const fetchNextVideo = async (index) => {
       dislikes: 5,
       comments: 150,
       shares: 45,
-      isSubscribed: false,
+      isSubscribed: true,
       userReaction: null
     },
     // Добавляй сколько хочешь
@@ -239,7 +239,7 @@ function CustomVideoPlayer({ video, toggleComments }) {
           <img src={video.avatar} alt={video.author} className="author-avatar" />
           <p className="author-nickname">@{video.author}</p>
           <button className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}>
-            {video.isSubscribed ? "Отписаться" : "Подписаться"}
+            {video.isSubscribed ? "Unfollow" : "Follow"}
           </button>
         </div>
         <p className="video-description">{video.description}</p>

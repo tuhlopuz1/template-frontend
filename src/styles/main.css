@@ -250,6 +250,8 @@
 }
 
 .subscribe-btn {
+  position: absolute;
+  right: 5%;
   background-color: white;
   color: black;
   border: none;
@@ -257,6 +259,7 @@
   padding: 8px 16px;
   cursor: pointer;
   font-size: 14px;
+  filter: drop-shadow(1px 1px 2px black);
 }
 
 .custom-progress-bar {
@@ -276,7 +279,11 @@
   transition: width 0.1s linear;
 }
 
-
+.subscribe-btn.subscribed {
+  background-color: transparent;
+  color: white;
+  border: 1px solid white;
+}
 
 
 
