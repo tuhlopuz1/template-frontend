@@ -178,7 +178,7 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 50dvh;
+  bottom: 70dvh;
   background: rgba(0, 0, 0, 0);
   z-index: 25;
 }
@@ -188,18 +188,41 @@
   overflow: hidden;
 }
 
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
 
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
 
+.comment-body {
+  flex: 1;
+}
 
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
 
+.comment-likes {
+  font-size: 12px;
+  color: #f87171; /* Красное сердечко */
+}
 
-
-
-
-
-
-
-
+.comment-text {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+}
 
 
 /* ========== Mobile адаптив ========== */
@@ -231,17 +254,12 @@
     height: 100dvh;
   }
 
-
-
-
-
-
   .comment-section {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 50dvh;
+    height: 70dvh;
     width: 100%;
     background-color: #fff;
     border-top: 1px solid #ddd;
@@ -260,7 +278,7 @@
     color: #333;
 
     /* Новые строки ↓ */
-    max-height: calc(50dvh - 48px); /* 50dvh (высота блока) минус примерная высота header */
+    max-height: calc(70dvh - 48px); /* 50dvh (высота блока) минус примерная высота header */
     overflow-y: auto;
   }
 
@@ -270,8 +288,4 @@
     height: 100dvh;
     width: 100%;
   }
-
-
-
-
 }

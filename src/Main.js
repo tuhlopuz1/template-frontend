@@ -66,6 +66,7 @@ const fetchNextVideo = async (index) => {
 function MainPage() {
   const [showComments, setShowComments] = useState(false);
   const [videos, setVideos] = useState([null]); // Храним загруженные видео
+  const [comments, setComments] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0); // Текущий индекс активного видео
   const nextIndexRef = useRef(0);
   const isLoadingRef = useRef(false);
@@ -74,6 +75,34 @@ function MainPage() {
   const toggleComments = () => {
     setShowComments((prev) => !prev);
   };
+
+  const exampleComments = [
+  {
+    author: "user_commenter1",
+    avatar: "https://randomuser.me/api/portraits/men/5.jpg",
+    content: "Очень крутое видео!",
+    likes: 12
+  },
+  {
+    author: "user_commenter2",
+    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+    content: "Спасибо за полезный контент.",
+    likes: 7
+  },
+  {
+    author: "user_commenter2",
+    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+    content: "Спасибо за полезный контент.",
+    likes: 7
+  },
+  {
+    author: "user_commenter2",
+    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+    content: "Спасибо за полезный контент.",
+    likes: 7
+  },
+];
+
 
   const loadVideoAtIndex = useCallback(async (index) => {
     if (isLoadingRef.current) return;
@@ -145,6 +174,12 @@ function MainPage() {
     ensurePreloaded(currentIndex);
   }, [currentIndex, ensurePreloaded]);
 
+  useEffect(() => {
+  // Здесь можно подключить API
+  setComments(exampleComments);
+  }, []);
+
+
   const isPortrait = window.matchMedia('(orientation: portrait)').matches;
   const actionBtnSize = 30;
 
@@ -191,11 +226,24 @@ function MainPage() {
             <h3>251 Comments</h3>
             <button className="close-comments-btn" onClick={toggleComments}><FiX size={25} /></button>
           </div>
-          <div className="comments-content">
-            {[...Array(251)].map((_, i) => (
-              <p key={i}>Comment {i + 1}</p>
-            ))}
-          </div>
+            <div className="comments-content">
+              {comments.length > 0 ? (
+                comments.map((comment, i) => (
+                  <div key={i} className="comment-item">
+                    <img src={comment.avatar} alt={comment.author} className="comment-avatar" />
+                    <div className="comment-body">
+                      <div className="comment-header">
+                        <strong>{comment.author}</strong>
+                        <span className="comment-likes">❤️ {comment.likes}</span>
+                      </div>
+                      <p className="comment-text">{comment.content}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>Загрузка комментариев...</p>
+              )}
+            </div>
         </div>
       </div>
     </div>
