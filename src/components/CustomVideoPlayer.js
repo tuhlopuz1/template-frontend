@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiShare2, FiPlay, FiMusic } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import "../styles/player.css"
 function CustomVideoPlayer({ video, toggleComments }) {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
