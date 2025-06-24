@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiUser, FiUsers, FiSearch, FiSettings, FiMenu, FiX, FiStar } from 'react-icons/fi';
 import '../styles/sidebar.css';
 

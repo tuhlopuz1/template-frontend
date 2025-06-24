@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
-import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiShare2, FiPlay } from "react-icons/fi";
-
+import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiShare2, FiPlay, FiMusic } from "react-icons/fi";
+import { Link } from "react-router-dom";
 function CustomVideoPlayer({ video, toggleComments }) {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
@@ -55,6 +55,10 @@ function CustomVideoPlayer({ video, toggleComments }) {
       videoRef.current.play();
     }
   };
+
+  const checkSound = () => {
+    console.log('check sound')
+  }
 
   // ===== Автовоспроизведение на фокусе =====
   useEffect(() => {
@@ -143,6 +147,16 @@ function CustomVideoPlayer({ video, toggleComments }) {
         </div>
         <p className="video-description">{video.description}</p>
       </div>
+
+      <div className="sound-description-panel">
+
+        <Link to="/" className="row">
+          <FiMusic onClick={ checkSound } className="music-icon" size={15} />
+          <p className="sound-name">original sound</p>
+        </Link>
+
+      </div>
+
 
     </>
   );

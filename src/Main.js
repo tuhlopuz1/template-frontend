@@ -23,7 +23,7 @@ const fetchNextVideo = async (index) => {
     },
     {
       url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e0545842-1a1e-49b2-adbd-375eb1c4c18e.mp4",
-      description: "Второе видео, наслаждайтесь просмотром!",
+      description: "Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!  ",
       author: "user_two",
       avatar: "https://randomuser.me/api/portraits/women/2.jpg",
       likes: 456,

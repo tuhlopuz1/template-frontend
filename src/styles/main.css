@@ -206,7 +206,7 @@
 
 .video-info-bar {
   position: absolute;
-  bottom: 20px;
+  bottom: 40px;
   left: 0px;
   width: 49dvh;
   right: 20px;
@@ -265,7 +265,7 @@
 
 .custom-progress-bar {
   position: absolute;
-  bottom: 0;
+  bottom: 43px;
   left: 0;
   height: 4px;
   width: 100%;
@@ -286,7 +286,39 @@
   border: 1px solid white;
 }
 
+.sound-description-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 43px;
+}
 
+.sound-description-panel a {
+  
+  width: 70%;
+  display: flex;
+  gap: 3%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background-color: #333;
+  padding: 5px;
+}
+
+.sound-description-panel p {
+  margin: 0;
+  color: white;
+  font-size: 14px;
+}
+
+.music-icon {
+  color: white;
+}
 
 .play-overlay {
   position: absolute;
