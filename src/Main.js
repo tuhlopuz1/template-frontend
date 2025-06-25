@@ -1,7 +1,7 @@
 import Sidebar from "./components/Sidebar";
 import { useState, useEffect, useRef, useCallback } from "react";
 import './styles/main.css';
-import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2 } from "react-icons/fi";
+import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2, FiHeart } from "react-icons/fi";
 import CustomVideoPlayer from "./components/CustomVideoPlayer";
 
 // Фейковая функция для подгрузки
@@ -9,6 +9,18 @@ const fetchNextVideo = async (index) => {
   await new Promise((resolve) => setTimeout(resolve, 300));
 
   const videosData = [
+    {
+      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e0545842-1a1e-49b2-adbd-375eb1c4c18e.mp4",
+      description: "Третье видео про путешествия.",
+      author: "user_three",
+      avatar: "https://randomuser.me/api/portraits/men/3.jpg",
+      likes: 789,
+      dislikes: 5,
+      comments: 150,
+      shares: 45,
+      isSubscribed: false,
+      userReaction: null
+    },
     {
       url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e3348fb7-84db-4d57-8eb2-3275e6103056.mp4",
       description: "Это первое видео. Оно очень интересное!",
@@ -35,18 +47,6 @@ const fetchNextVideo = async (index) => {
     },
     {
       url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e0545842-1a1e-49b2-adbd-375eb1c4c18e.mp4",
-      description: "Третье видео про путешествия.",
-      author: "user_three",
-      avatar: "https://randomuser.me/api/portraits/men/3.jpg",
-      likes: 789,
-      dislikes: 5,
-      comments: 150,
-      shares: 45,
-      isSubscribed: false,
-      userReaction: null
-    },
-    {
-      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e0545842-1a1e-49b2-adbd-375eb1c4c18e.mp4",
       description: "Четвёртое видео про путешествия.",
       author: "user_three",
       avatar: "https://randomuser.me/api/portraits/men/3.jpg",
@@ -57,7 +57,6 @@ const fetchNextVideo = async (index) => {
       isSubscribed: true,
       userReaction: null
     },
-    // Добавляй сколько хочешь
   ];
 
   return videosData[index % videosData.length];
@@ -65,53 +64,55 @@ const fetchNextVideo = async (index) => {
 
 function MainPage() {
   const [showComments, setShowComments] = useState(false);
-  const [videos, setVideos] = useState([null]); // Храним загруженные видео
+  const [videos, setVideos] = useState([null]);
   const [comments, setComments] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0); // Текущий индекс активного видео
-  const nextIndexRef = useRef(0);
-  const isLoadingRef = useRef(false);
-  const observers = useRef([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Очередь индексов для загрузки и состояние загрузки
+  const loadingQueue = useRef([]);
+  const loadingInProgress = useRef(false);
 
   const toggleComments = () => {
     setShowComments((prev) => !prev);
   };
 
   const exampleComments = [
-  {
-    author: "user_commenter1",
-    avatar: "https://randomuser.me/api/portraits/men/5.jpg",
-    content: "Очень крутое видео!",
-    likes: 12
-  },
-  {
-    author: "user_commenter2",
-    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-    content: "Спасибо за полезный контент.",
-    likes: 7
-  },
-  {
-    author: "user_commenter2",
-    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-    content: "Спасибо за полезный контент.",
-    likes: 7
-  },
-  {
-    author: "user_commenter2",
-    avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-    content: "Спасибо за полезный контент.",
-    likes: 7
-  },
-];
+    {
+      author: "user_commenter1",
+      avatar: "https://randomuser.me/api/portraits/men/5.jpg",
+      content: "Очень крутое видео!",
+      likes: 12
+    },
+    {
+      author: "user_commenter2",
+      avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+      content: "Спасибо за полезный контент.",
+      likes: 7
+    },
+    {
+      author: "user_commenter2",
+      avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+      content: "Спасибо за полезный контент.",
+      likes: 7
+    },
+    {
+      author: "user_commenter2",
+      avatar: "https://randomuser.me/api/portraits/women/6.jpg",
+      content: "Спасибо за полезный контент.",
+      likes: 7
+    },
+  ];
 
-
+  // Загружаем видео по индексу (один за раз)
   const loadVideoAtIndex = useCallback(async (index) => {
-    if (isLoadingRef.current) return;
+    if (loadingInProgress.current) return;
+    loadingInProgress.current = true;
 
-    isLoadingRef.current = true;
+    // Обеспечиваем, что массив videos достаточно длинный
     setVideos((prev) => {
       const updated = [...prev];
       while (updated.length <= index) {
-        updated.push(null); // Создаём placeholder если вдруг массив короче
+        updated.push(null);
       }
       return updated;
     });
@@ -124,25 +125,41 @@ function MainPage() {
       return updated;
     });
 
-    nextIndexRef.current = Math.max(nextIndexRef.current, index + 1);
-    isLoadingRef.current = false;
+    loadingInProgress.current = false;
+
+    // После загрузки текущего — стартуем следующую загрузку из очереди
+    if (loadingQueue.current.length > 0) {
+      const nextIndex = loadingQueue.current.shift();
+      loadVideoAtIndex(nextIndex);
+    }
   }, []);
 
-  const ensurePreloaded = useCallback(async (index) => {
-    const preloadCount = 3;
-    for (let i = index + 1; i <= index + preloadCount; i++) {
-      if (!videos[i]) {
-        await loadVideoAtIndex(i);
-      }
+  // Добавляем индекс в очередь загрузки, если не загружен и не в очереди
+  const enqueueLoad = useCallback((index) => {
+    if (videos[index] || loadingQueue.current.includes(index)) return;
+    loadingQueue.current.push(index);
+
+    if (!loadingInProgress.current) {
+      const nextIndex = loadingQueue.current.shift();
+      loadVideoAtIndex(nextIndex);
     }
   }, [videos, loadVideoAtIndex]);
 
-  // Инициализируем первые видео
+  // Следим за текущим индексом и планируем загрузку следующих 3 видео
   useEffect(() => {
-    loadVideoAtIndex(0);
-  }, [loadVideoAtIndex]);
+    const preloadCount = 3;
+    for (let i = currentIndex + 1; i <= currentIndex + preloadCount; i++) {
+      enqueueLoad(i);
+    }
+  }, [currentIndex, enqueueLoad]);
 
-  // Создаем IntersectionObserver для каждого видео
+  // Инициализируем загрузку первого видео при монтировании
+  useEffect(() => {
+    enqueueLoad(0);
+  }, [enqueueLoad]);
+
+  // IntersectionObserver для смены активного видео
+  const observers = useRef([]);
   const videoRefs = useRef([]);
 
   useEffect(() => {
@@ -169,16 +186,9 @@ function MainPage() {
     };
   }, [videos]);
 
-  // Следим за сменой активного видео и подгружаем вперед
   useEffect(() => {
-    ensurePreloaded(currentIndex);
-  }, [currentIndex, ensurePreloaded]);
-
-  useEffect(() => {
-  // Здесь можно подключить API
-  setComments(exampleComments);
+    setComments(exampleComments);
   }, []);
-
 
   const isPortrait = window.matchMedia('(orientation: portrait)').matches;
   const actionBtnSize = 30;
@@ -199,7 +209,11 @@ function MainPage() {
               ref={(el) => (videoRefs.current[index] = el)}
             >
               {video ? (
-                <CustomVideoPlayer video={video} toggleComments={toggleComments} />
+                <CustomVideoPlayer
+                  video={video}
+                  toggleComments={toggleComments}
+                  isActive={index === currentIndex}
+                />
               ) : (
                 <>
                   <div className="loading-placeholder">
@@ -212,7 +226,7 @@ function MainPage() {
                     <p className="stat-amount">0</p>
                     <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
                     <p className="stat-amount">0</p>
-                    <button className="action-btn share" ><FiShare2 size={actionBtnSize} /></button>
+                    <button className="action-btn share"><FiShare2 size={actionBtnSize} /></button>
                     <p className="stat-amount">0</p>
                   </div>
                 </>
@@ -223,27 +237,27 @@ function MainPage() {
 
         <div className={`comment-section ${showComments ? 'open' : ''}`}>
           <div className="comments-header">
-            <h3>251 Comments</h3>
+            <h3>{comments.length} Comments</h3>
             <button className="close-comments-btn" onClick={toggleComments}><FiX size={25} /></button>
           </div>
-            <div className="comments-content">
-              {comments.length > 0 ? (
-                comments.map((comment, i) => (
-                  <div key={i} className="comment-item">
-                    <img src={comment.avatar} alt={comment.author} className="comment-avatar" />
-                    <div className="comment-body">
-                      <div className="comment-header">
-                        <strong>{comment.author}</strong>
-                        <span className="comment-likes">❤️ {comment.likes}</span>
-                      </div>
-                      <p className="comment-text">{comment.content}</p>
+          <div className="comments-content">
+            {comments.length > 0 ? (
+              comments.map((comment, i) => (
+                <div key={i} className="comment-item">
+                  <img src={comment.avatar} alt={comment.author} className="comment-avatar" />
+                  <div className="comment-body">
+                    <div className="comment-header">
+                      <strong>{comment.author}</strong>
+                      <div className="comment-likes"><FiHeart /> {comment.likes}</div>
                     </div>
+                    <p className="comment-text">{comment.content}</p>
                   </div>
-                ))
-              ) : (
-                <p>Загрузка комментариев...</p>
-              )}
-            </div>
+                </div>
+              ))
+            ) : (
+              <p>Загрузка комментариев...</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
