@@ -127,7 +127,7 @@
 .videos-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 6px;
 }
 
 /* Контейнер для поддержания соотношения сторон 9:16 */

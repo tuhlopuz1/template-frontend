@@ -10,10 +10,10 @@ const Sidebar = () => {
   
   const menuItems = [
     { path: '/main', icon: <FiStar size={20} />, label: 'For you' },
-    { path: '/profile/dashboard', icon: <FiUsers size={20} />, label: 'Following' },
+    { path: '/following', icon: <FiUsers size={20} />, label: 'Following' },
     { path: '/profile', icon: <FiUser size={20} />, label: 'Profile' },
-    { path: '/profile/search', icon: <FiSearch size={20} />, label: 'Search' },
-    { path: '/profile/settings', icon: <FiSettings size={20} />, label: 'Settings' },
+    { path: '/search', icon: <FiSearch size={20} />, label: 'Search' },
+    { path: '/settings', icon: <FiSettings size={20} />, label: 'Settings' },
   ];
 
   const toggleSidebar = () => {

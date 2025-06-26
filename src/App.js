@@ -5,6 +5,7 @@ import SignupPage from './SignUp.js';
 import LogInPage from './Login.js';
 import MainPage from './Main.js'
 import ProfilePage from './Profile.js';
+import SearchPage from './Search.js';
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path="/login" element={<LogInPage />} />
         <Route path="/main" element={<MainPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/following" element={<MainPage />} />
+        <Route path="/search" element={<SearchPage />} />
       </Routes>
     </Router>
   );
