@@ -1,25 +1,32 @@
-body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  max-width: 1000px;
-  margin: auto;
+.search-page {
+  display: flex;
+  height: 100dvh;
 }
 
 .search-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+  flex: 1;
+}
+
+.search-bar {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.search-container input {
+.search-bar input {
   flex: 1;
-  padding: 8px;
-  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.search-container button {
-  padding: 8px 16px;
+.search-bar button {
+  padding: 10px 20px;
+  font-size: 16px;
   background-color: #3b82f6;
   color: white;
   border: none;
@@ -27,43 +34,51 @@ body {
   cursor: pointer;
 }
 
+.search-bar button:hover {
+  background-color: #2563eb;
+}
+
 .tabs {
   display: flex;
+  border-bottom: 1px solid #ccc;
   margin-bottom: 20px;
-  border-bottom: 2px solid #ddd;
 }
 
-.tab {
+.tabs button {
   padding: 10px 20px;
+  border: none;
+  background: none;
   cursor: pointer;
+  font-size: 16px;
 }
 
-.active-tab {
+.tabs button.active {
   border-bottom: 2px solid #3b82f6;
   font-weight: bold;
+  color: #3b82f6;
 }
 
 .loader {
   text-align: center;
   padding: 20px;
+  font-size: 18px;
 }
 
-.video-grid {
+.videos-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 16px;
 }
 
-.video-item {
+.video-thumbnail {
   position: relative;
   width: 100%;
-  padding-top: 177.77%; /* 9:16 aspect ratio */
-  background-color: #f0f0f0;
-  border-radius: 8px;
+  padding-top: 177.77%; /* 9:16 соотношение */
   overflow: hidden;
+  border-radius: 8px;
 }
 
-.video-item img {
+.video-thumbnail img {
   position: absolute;
   top: 0;
   left: 0;
@@ -72,21 +87,33 @@ body {
   object-fit: cover;
 }
 
-.user-list {
+.users-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
-.user-item {
+.user-card {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 16px;
 }
 
-.user-item img {
+.user-card img {
   width: 48px;
   height: 48px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.user-card span {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+
+@media (orientation: portrait) {
+  .search-container {
+    margin: 55px auto;
+  }
 }

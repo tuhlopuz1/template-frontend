@@ -53,13 +53,13 @@ function ProfilePage() {
             className={`tab-btn ${activeTab === 'videos' ? 'active' : ''}`}
             onClick={() => setActiveTab('videos')}
           >
-            Видео
+            Your videos
           </button>
           <button
             className={`tab-btn ${activeTab === 'liked' ? 'active' : ''}`}
             onClick={() => setActiveTab('liked')}
           >
-            Понравившиеся
+            Liked
           </button>
         </div>
 
