@@ -10,7 +10,7 @@ const fetchNextVideo = async (index) => {
 
   const videosData = [
     {
-      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
+      url: "https://176.113.83.132/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
       description: "Третье видео про путешествия.",
       author: "user_three",
       avatar: "https://randomuser.me/api/portraits/men/3.jpg",
@@ -22,7 +22,7 @@ const fetchNextVideo = async (index) => {
       userReaction: null
     },
     {
-      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
+      url: "https://176.113.83.132/stream-video/0686138b-d89a-7be3-a577-b46309b56da9",
       description: "Это первое видео. Оно очень интересное!",
       author: "user_one",
       avatar: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -34,7 +34,7 @@ const fetchNextVideo = async (index) => {
       userReaction: null
     },
     {
-      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
+      url: "https://176.113.83.132/stream-video/0686138b-d89a-7be3-a577-b46309b56da9",
       description: "Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!  ",
       author: "user_two",
       avatar: "https://randomuser.me/api/portraits/women/2.jpg",
@@ -46,7 +46,7 @@ const fetchNextVideo = async (index) => {
       userReaction: "like"
     },
     {
-      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
+      url: "https://176.113.83.132/stream-video/0686138e-bd8d-7d02-800d-6c9c480037de",
       description: "Четвёртое видео про путешествия.",
       author: "user_three",
       avatar: "https://randomuser.me/api/portraits/men/3.jpg",
