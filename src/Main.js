@@ -10,7 +10,7 @@ const fetchNextVideo = async (index) => {
 
   const videosData = [
     {
-      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e0545842-1a1e-49b2-adbd-375eb1c4c18e.mp4",
+      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
       description: "Третье видео про путешествия.",
       author: "user_three",
       avatar: "https://randomuser.me/api/portraits/men/3.jpg",
@@ -22,7 +22,7 @@ const fetchNextVideo = async (index) => {
       userReaction: null
     },
     {
-      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e3348fb7-84db-4d57-8eb2-3275e6103056.mp4",
+      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
       description: "Это первое видео. Оно очень интересное!",
       author: "user_one",
       avatar: "https://randomuser.me/api/portraits/men/1.jpg",
@@ -34,7 +34,7 @@ const fetchNextVideo = async (index) => {
       userReaction: null
     },
     {
-      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e0545842-1a1e-49b2-adbd-375eb1c4c18e.mp4",
+      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
       description: "Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!  ",
       author: "user_two",
       avatar: "https://randomuser.me/api/portraits/women/2.jpg",
@@ -46,7 +46,7 @@ const fetchNextVideo = async (index) => {
       userReaction: "like"
     },
     {
-      url: "https://uozfhywwucahpeysjtvy.supabase.co/storage/v1/object/videos/string/e0545842-1a1e-49b2-adbd-375eb1c4c18e.mp4",
+      url: "http://176.113.83.132:8000/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
       description: "Четвёртое видео про путешествия.",
       author: "user_three",
       avatar: "https://randomuser.me/api/portraits/men/3.jpg",
