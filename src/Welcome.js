@@ -75,7 +75,7 @@ const WelcomePage = () => {
         {/* Hero Section */}
         <div className="hero-section">
           <h1 className="hero-title">
-            Welcome to <span className="app-name">AppName</span>
+            Welcome to <span className="app-name">Vickz</span>
           </h1>
           <p className="hero-description">
             Your all-in-one platform for productivity and collaboration. Start organizing your work and life in a whole new way.

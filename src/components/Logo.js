@@ -10,9 +10,9 @@ const Logo = ({ size = 'medium' }) => {
   return (
     <div className="logo">
       <div className={`logo-icon ${sizeClass}`}>
-        <span className="logo-letter">A</span>
+        <span className="logo-letter">V</span>
       </div>
-      <span className="logo-text">AppName</span>
+      <span className="logo-text">Vickz</span>
     </div>
   );
 };

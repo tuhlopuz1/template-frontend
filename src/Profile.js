@@ -41,9 +41,9 @@ function ProfilePage() {
             <h2>{user.username}</h2>
             <p>{user.description}</p>
             <div className="profile-stats">
-              <div><strong>{user.followers}</strong> Подписчики</div>
-              <div><strong>{user.following}</strong> Подписки</div>
-              <div><strong>{user.likes}</strong> Лайки</div>
+              <div><strong>{user.followers}</strong> Followers</div>
+              <div><strong>{user.following}</strong> Following</div>
+              <div><strong>{user.likes}</strong> Likes</div>
             </div>
           </div>
         </div>
