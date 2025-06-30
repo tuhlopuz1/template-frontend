@@ -5,16 +5,17 @@ import { validateSignup } from './components/validation';
 import './styles/signup.css';
 import Navbar from './components/NavBar';
 
-
 const SignupPage = () => {
-  
+
   const [formData, setFormData] = useState({
     email: '',
     username: '',
     password: '',
     termsAccepted: false
   });
+
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -27,13 +28,42 @@ const SignupPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    setServerError('');
+    setErrors('')
     const validationResult = validateSignup(formData);
-    console.log(validationResult)
+
     if (validationResult.isValid) {
-      console.log('Signup successful!', formData);
-      
-      window.location.href = '#/main';
-      
+      fetch('https://api.vickz.ru/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+        .then(response => {
+          if (!response.ok) {
+            return response.json().then(errorData => {
+              throw new Error(errorData.msg || 'Signup error');
+            });
+          }
+          return response.json();
+        })
+        .then(result => {
+          console.log('Ответ от сервера:', result);
+          localStorage.setItem('id', result.id);
+          localStorage.setItem('username', result.username);
+          localStorage.setItem('avatar_url', result.avatar_url);
+          localStorage.setItem('access_token', result.access_token);
+          localStorage.setItem('refresh_token', result.refresh_token);
+
+
+
+          window.location.href = '#/main';
+        })
+        .catch(error => {
+          console.error('Произошла ошибка:', error);
+          setServerError(error.message);
+        });
     } else {
       setErrors(validationResult.errors);
     }
@@ -41,11 +71,11 @@ const SignupPage = () => {
 
   return (
     <div className="signup-container">
-        <Navbar/>
+      <Navbar />
       <div className="signup-box">
         <Link to="/" className="back-button">
-          <svg id="close-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          <svg id="close-svg" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
           </svg>
         </Link>
         <div className="signup-header">
@@ -53,12 +83,13 @@ const SignupPage = () => {
             <Logo size="large" />
           </div>
           <h2>Create your account</h2>
-          <p>
+          <p className='login-suggest'>
             Already have an account?{' '}
             <Link to="/login" className="link">
               Log in
             </Link>
           </p>
+          {serverError && <p className="server-error">{serverError}</p>}
         </div>
 
         <form className="signup-form" onSubmit={handleSubmit}>
@@ -104,11 +135,8 @@ const SignupPage = () => {
             {errors.password && <p className="error-text">{errors.password}</p>}
           </div>
 
-
           <button type="submit" className="submit-button">
-
             Sign up
-
           </button>
         </form>
       </div>

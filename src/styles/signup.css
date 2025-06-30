@@ -14,6 +14,7 @@
     backdrop-filter: blur(10px);
   }
 
+
   
   .signup-box {
     width: 100%;
@@ -41,11 +42,17 @@
     color: #111827;
   }
   
-  .signup-header p {
+  .login-suggest {
     font-size: 14px;
     color: #6b7280;
   }
   
+  .server-error {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+  }
+
   .link {
     color: #2563eb;
     text-decoration: none;

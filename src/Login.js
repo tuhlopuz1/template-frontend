@@ -14,6 +14,8 @@ const LogInPage = () => {
     termsAccepted: false
   });
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState('');
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -28,11 +30,41 @@ const LogInPage = () => {
     e.preventDefault();
 
     const validationResult = validateLogin(formData);
+    formData.username = formData.identifier
     console.log(validationResult)
     if (validationResult.isValid) {
-      console.log('Signup successful!', formData);
       
-      window.location.href = '#/main';
+
+      fetch('https://api.vickz.ru/token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+        .then(response => {
+          console.log(response)
+          if (!response.ok) {
+            return response.json().then(errorData => {
+              throw new Error(errorData.msg || 'Login error');
+            });
+          }
+          return response.json();
+        })
+        .then(result => {
+          console.log('Ответ от сервера:', result);
+
+          localStorage.setItem('access_token', result.access_token)
+          localStorage.setItem('refresh_token', result.refresh_token)
+
+
+          window.location.href = '#/main';
+        })
+        .catch(error => {
+          console.error('Произошла ошибка:', error);
+          setServerError(error.message);
+        });
+
       
     } else {
       setErrors(validationResult.errors);
@@ -59,6 +91,7 @@ const LogInPage = () => {
               Sign up
             </Link>
           </p>
+          {serverError && <p className="server-error">{serverError}</p>}
         </div>
 
         <form className="signup-form" onSubmit={handleSubmit}>
