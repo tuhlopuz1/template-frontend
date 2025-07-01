@@ -20,6 +20,12 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const logOut = () => {
+    localStorage.clear();
+    window.location.href = ""
+  }
+  
+
   return (
     <>
       {/* Mobile menu button */}
@@ -80,6 +86,7 @@ const Sidebar = () => {
             <Link 
               href="/"
               className="logout-button"
+              onClick={logOut}
             >
               <span className="logout-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">

@@ -61,12 +61,12 @@ const SearchPage = () => {
         <div className="search-bar">
           <input
             type="text"
-            placeholder="Введите запрос..."
+            placeholder="Enter query..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           />
-          <button onClick={handleSearch}>Поиск</button>
+          <button onClick={handleSearch}>Search</button>
         </div>
 
         {/* Вкладки */}
@@ -75,18 +75,18 @@ const SearchPage = () => {
             className={activeTab === 'videos' ? 'active' : ''}
             onClick={() => setActiveTab('videos')}
           >
-            Видео
+            Video
           </button>
           <button
             className={activeTab === 'users' ? 'active' : ''}
             onClick={() => setActiveTab('users')}
           >
-            Люди
+            People
           </button>
         </div>
 
         {/* Loader */}
-        {isLoading && <div className="loader">Загрузка...</div>}
+        {isLoading && <div className="loader">Loading...</div>}
 
         {/* Результаты */}
         {!isLoading && (
