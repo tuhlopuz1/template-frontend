@@ -6,13 +6,12 @@ import CustomVideoPlayer from "./components/CustomVideoPlayer";
 
 // Фейковая функция для подгрузки
 const fetchNextVideo = async (index) => {
-  
   const access_token = localStorage.getItem('access_token');
-  
+
   if (!access_token) {
     localStorage.clear();
     window.location.href = '/';
-    return null; // добавь возврат, чтобы не ломалось
+    return null;
   }
 
   try {
@@ -26,7 +25,7 @@ const fetchNextVideo = async (index) => {
 
     if (!response.ok) {
       console.log(response);
-      return null; // не забудь вернуть null в случае ошибки
+      return null;
     }
 
     const result = await response.json();
@@ -36,7 +35,6 @@ const fetchNextVideo = async (index) => {
     console.error('Произошла ошибка:', error);
     return null;
   }
-
 };
 
 function MainPage() {
@@ -45,9 +43,9 @@ function MainPage() {
   const [comments, setComments] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Очередь индексов для загрузки и состояние загрузки
   const loadingQueue = useRef([]);
   const loadingInProgress = useRef(false);
+  const loadedIndexes = useRef(new Set());
 
   const toggleComments = () => {
     setShowComments((prev) => !prev);
@@ -65,27 +63,13 @@ function MainPage() {
       avatar: "https://randomuser.me/api/portraits/women/6.jpg",
       content: "Спасибо за полезный контент.",
       likes: 7
-    },
-    {
-      author: "user_commenter2",
-      avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-      content: "Спасибо за полезный контент.",
-      likes: 7
-    },
-    {
-      author: "user_commenter2",
-      avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-      content: "Спасибо за полезный контент.",
-      likes: 7
-    },
+    }
   ];
 
-  // Загружаем видео по индексу (один за раз)
   const loadVideoAtIndex = useCallback(async (index) => {
     if (loadingInProgress.current) return;
     loadingInProgress.current = true;
 
-    // Обеспечиваем, что массив videos достаточно длинный
     setVideos((prev) => {
       const updated = [...prev];
       while (updated.length <= index) {
@@ -102,27 +86,26 @@ function MainPage() {
       return updated;
     });
 
+    loadedIndexes.current.add(index);
     loadingInProgress.current = false;
 
-    // После загрузки текущего — стартуем следующую загрузку из очереди
     if (loadingQueue.current.length > 0) {
       const nextIndex = loadingQueue.current.shift();
       loadVideoAtIndex(nextIndex);
     }
   }, []);
 
-  // Добавляем индекс в очередь загрузки, если не загружен и не в очереди
   const enqueueLoad = useCallback((index) => {
-    if (videos[index] || loadingQueue.current.includes(index)) return;
+    if (loadedIndexes.current.has(index) || loadingQueue.current.includes(index)) return;
+
     loadingQueue.current.push(index);
 
     if (!loadingInProgress.current) {
       const nextIndex = loadingQueue.current.shift();
       loadVideoAtIndex(nextIndex);
     }
-  }, [videos, loadVideoAtIndex]);
+  }, [loadVideoAtIndex]);
 
-  // Следим за текущим индексом и планируем загрузку следующих 3 видео
   useEffect(() => {
     const preloadCount = 3;
     for (let i = currentIndex + 1; i <= currentIndex + preloadCount; i++) {
@@ -130,12 +113,10 @@ function MainPage() {
     }
   }, [currentIndex, enqueueLoad]);
 
-  // Инициализируем загрузку первого видео при монтировании
   useEffect(() => {
     enqueueLoad(0);
   }, [enqueueLoad]);
 
-  // IntersectionObserver для смены активного видео
   const observers = useRef([]);
   const videoRefs = useRef([]);
 
