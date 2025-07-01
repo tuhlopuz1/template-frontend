@@ -104,7 +104,7 @@
         >
           <video
             className="main-video"
-            src={video.url}
+            src={video.serv_url}
             ref={videoRef}
             playsInline
             onTimeUpdate={handleTimeUpdate}

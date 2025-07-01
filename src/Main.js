@@ -6,60 +6,37 @@ import CustomVideoPlayer from "./components/CustomVideoPlayer";
 
 // Фейковая функция для подгрузки
 const fetchNextVideo = async (index) => {
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  
+  const access_token = localStorage.getItem('access_token');
+  
+  if (!access_token) {
+    localStorage.clear();
+    window.location.href = '/';
+    return null; // добавь возврат, чтобы не ломалось
+  }
 
-  const videosData = [
-    {
-      url: "https://api.vickz.ru/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
-      description: "Третье видео про путешествия.",
-      author: "user_three",
-      avatar: "https://randomuser.me/api/portraits/men/3.jpg",
-      likes: 789,
-      dislikes: 5,
-      comments: 150,
-      shares: 45,
-      isSubscribed: false,
-      userReaction: null
-    },
-    {
-      url: "https://api.vickz.ru/stream-video/0686138e-bd8d-7d02-800d-6c9c480037de",
-      description: "Это первое видео. Оно очень интересное!",
-      author: "user_one",
-      avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-      likes: 123,
-      dislikes: 10,
-      comments: 251,
-      shares: 15,
-      isSubscribed: false,
-      userReaction: null
-    },
-    {
-      url: "https://api.vickz.ru/stream-video/0686138b-d89a-7be3-a577-b46309b56da9",
-      description: "Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!Второе видео, наслаждайтесь просмотром!  ",
-      author: "user_two",
-      avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-      likes: 456,
-      dislikes: 25,
-      comments: 89,
-      shares: 30,
-      isSubscribed: true,
-      userReaction: "like"
-    },
-    {
-      url: "https://api.vickz.ru/stream-video/068612be-cadd-7dd1-ac12-a5a2274e12ed",
-      description: "Четвёртое видео про путешествия.",
-      author: "user_three",
-      avatar: "https://randomuser.me/api/portraits/men/3.jpg",
-      likes: 789,
-      dislikes: 5,
-      comments: 150,
-      shares: 45,
-      isSubscribed: true,
-      userReaction: null
-    },
-  ];
+  try {
+    const response = await fetch('https://api.vickz.ru/get-video', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${access_token}`
+      }
+    });
 
-  return videosData[index % videosData.length];
+    if (!response.ok) {
+      console.log(response);
+      return null; // не забудь вернуть null в случае ошибки
+    }
+
+    const result = await response.json();
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.error('Произошла ошибка:', error);
+    return null;
+  }
+
 };
 
 function MainPage() {
