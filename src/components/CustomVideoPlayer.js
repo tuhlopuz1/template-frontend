@@ -129,9 +129,9 @@
         </div>
 
         <div className="action-buttons">
-          <button className="action-btn like"><FiThumbsUp size={actionBtnSize} /></button>
+          <button className={`action-btn like ${video.is_liked_by_user ? 'liked' : ''}`}><FiThumbsUp size={actionBtnSize} /></button>
           <p className="stat-amount">{video.likes}</p>
-          <button className="action-btn dislike"><FiThumbsDown size={actionBtnSize} /></button>
+          <button className={`action-btn dislike ${video.is_disliked_by_user ? 'disliked' : ''}`}><FiThumbsDown size={actionBtnSize} /></button>
           <p className="stat-amount">{video.dislikes}</p>
           <button className="action-btn comment-toggle" onClick={toggleComments}><FiMessageCircle size={actionBtnSize} /></button>
           <p className="stat-amount">{video.comments}</p>
@@ -141,8 +141,8 @@
 
         <div className="video-info-bar">
           <div className="video-info-header">
-            <img src={video.avatar} alt={video.author} className="author-avatar" />
-            <p className="author-nickname">@{video.author}</p>
+            <img src={'https://api.vickz.ru/get-profile-picture/'+video.author_id} alt={video.author} className="author-avatar" />
+            <p className="author-nickname">{video.author_name}</p>
             <button className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}>
               {video.isSubscribed ? "Unfollow" : "Follow"}
             </button>
