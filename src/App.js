@@ -8,6 +8,7 @@ import ProfilePage from './Profile.js';
 import SearchPage from './Search.js';
 import NotFoundPage from './NotFound.js';
 import UserPage from './User.js';
+import WatchPage from './Watch.js';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/user/:username" element={<UserPage />} />
+        <Route path="/watch/:id" element={<WatchPage />} />
       </Routes>
     </Router>
   );
