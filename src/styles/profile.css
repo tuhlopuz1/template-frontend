@@ -134,20 +134,22 @@
 .video-thumbnail-wrapper {
   position: relative;
   width: 100%;
-  padding-top: 130%; /* Соотношение 9:16 → 16 / 9 * 100 = 177.77% */
+
+  aspect-ratio: 9 / 16;
   overflow: hidden;
   border-radius: 12px;
   background-color: #000; /* Заглушка на случай долгой загрузки */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Само изображение */
-.video-thumbnail-wrapper img {
-  position: absolute;
-  top: 0;
-  left: 0;
+.video-thumbnail-wrapper video {
+
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* Заполняет контейнер, обрезая лишнее */
+  height: 100dvh;
+  object-fit: scale-down; /* Заполняет контейнер, обрезая лишнее */
   border-radius: 12px;
   cursor: pointer;
   transition: transform 0.3s ease;
