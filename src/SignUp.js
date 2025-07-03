@@ -58,7 +58,7 @@ const SignupPage = () => {
 
 
 
-          window.location.href = '#/main';
+          window.location.href = '#/profile-setup';
         })
         .catch(error => {
           console.error('Произошла ошибка:', error);
@@ -117,6 +117,20 @@ const SignupPage = () => {
               onChange={handleChange}
               className={`form-input ${errors.username ? 'input-error' : ''}`}
               placeholder="Username"
+            />
+            {errors.username && <p className="error-text">{errors.username}</p>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="name" className="sr-only">Name</label>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value={formData.name}
+              onChange={handleChange}
+              className={`form-input ${errors.name ? 'input-error' : ''}`}
+              placeholder="Name"
             />
             {errors.username && <p className="error-text">{errors.username}</p>}
           </div>

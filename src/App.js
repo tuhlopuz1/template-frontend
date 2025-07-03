@@ -9,6 +9,7 @@ import SearchPage from './Search.js';
 import NotFoundPage from './NotFound.js';
 import UserPage from './User.js';
 import WatchPage from './Watch.js';
+import ProfileSetupPage from './ProfileSetup.js';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LogInPage />} />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/profile-setup" element={<ProfileSetupPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/following" element={<MainPage />} />
         <Route path="/search" element={<SearchPage />} />
