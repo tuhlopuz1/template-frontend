@@ -217,6 +217,8 @@ const handleVideoClick = (e) => {
         <div className="video-info-header">
 	<Link to={`/user/${video.author_username}`}>
           <img src={`https://api.vickz.ru/get-profile-picture/${video.author_id}`} alt={video.author} className="author-avatar" />
+	</Link>
+	<Link to={`/user/${video.author_username}`}>
           <p className="author-nickname">{video.author_name}</p>
 	</Link>
           <button className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}>

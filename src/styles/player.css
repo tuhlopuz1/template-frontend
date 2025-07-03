@@ -47,6 +47,10 @@
   /* box-shadow: 0 4px 6px rgba(0,0,0,1); */
 }
 
+a {
+  text-decoration: none;
+  color: white;
+}
 
 .video-info-bar {
   position: absolute;
@@ -280,4 +284,6 @@
     opacity: 0;
   }
 }
+
+
 
