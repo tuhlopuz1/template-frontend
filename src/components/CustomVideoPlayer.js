@@ -215,8 +215,10 @@ const handleVideoClick = (e) => {
 
       <div className="video-info-bar">
         <div className="video-info-header">
+	<Link to={`/user/${video.author_username}`}>
           <img src={`https://api.vickz.ru/get-profile-picture/${video.author_id}`} alt={video.author} className="author-avatar" />
           <p className="author-nickname">{video.author_name}</p>
+	</Link>
           <button className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}>
             {video.isSubscribed ? "Unfollow" : "Follow"}
           </button>
@@ -225,7 +227,7 @@ const handleVideoClick = (e) => {
       </div>
 
       <div className="sound-description-panel">
-        <Link to="/" className="row">
+        <Link to="/#/sounds" className="row">
           <FiMusic onClick={checkSound} className="music-icon" size={15} />
           <p className="sound-name">original sound</p>
         </Link>
