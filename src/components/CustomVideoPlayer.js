@@ -56,23 +56,20 @@ const handleVideoClick = (e) => {
 
   const handleLike = async () => {
     const access_token = localStorage.getItem('access_token');
-    if (!access_token) return;
+    if (!access_token) {
+      window.location.href = '/#/login'
+    }
 
     const newLikeState = !isLiked;
     setIsLiked(newLikeState);
     setLikeCount(prev => newLikeState ? prev + 1 : prev - 1);
 
     try {
-      await fetch('https://api.vickz.ru/like-video', {
+      await fetch(`https://api.vickz.ru/like-video?uuid=${video.id}&like=${newLikeState}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${access_token}`
-        },
-        body: JSON.stringify({
-          videoId: video.id,
-          like: newLikeState
-        })
+        }
       });
     } catch (error) {
       console.error('Ошибка при отправке лайка:', error);
