@@ -18,6 +18,26 @@
   padding-right: 100px;
 }
 
+.like-btn {
+  border: none;
+  background: none;
+  margin: 3px;
+  cursor: pointer;
+}
+.like-btn.active {
+  color: #3b82f6;
+}
+
+.dislike-btn {
+  cursor: pointer;
+  margin: 3px;
+  border: none;
+  background: none;
+}
+.dislike-btn.active {
+  color: #3b82f6;
+}
+
 
 /* Кнопки действий */
 .action-buttons {
@@ -191,6 +211,7 @@
 .comment-item {
   display: flex;
   align-items: flex-start;
+  width: 95%;
   gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid #eee;
