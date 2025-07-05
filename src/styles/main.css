@@ -84,7 +84,9 @@
   transform: translateX(100%);
   transition: transform 0.3s ease;
   pointer-events: none;
-  z-index: 10;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
 }
 
 .comment-section.open {
@@ -102,6 +104,9 @@
 .comments-content {
   font-size: 14px;
   color: #333;
+  flex: 1;
+  overflow-y: auto; /* Чтобы список комментариев мог прокручиваться */
+  padding-bottom: 60px; /* Чтобы не перекрывать поле ввода */
 }
 
 .close-comments-btn {
@@ -211,7 +216,7 @@
 .comment-item {
   display: flex;
   align-items: flex-start;
-  width: 95%;
+  width: 100%;
   gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid #eee;
@@ -250,6 +255,82 @@
   margin: 0;
 }
 
+.no-comments {
+  width: 100%;
+  font-size: 20px;
+  height: 30dvh;
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #666;
+}
+
+/* Поле ввода комментария */
+/* Контейнер поля ввода — фиксируем снизу секции комментариев */
+.comment-input-section {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  flex-direction: row;
+  border-top: 1px solid #ddd;
+  background-color: #f9f9f9;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@media (orientation: landscape) {
+  .comment-input-section {
+    bottom: 20px;
+  }
+}
+
+/* Поле ввода на всю доступную ширину */
+.comment-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  font-size: 14px;
+  min-width: 0px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+/* Анимация при фокусе */
+.comment-input:focus {
+  border-color: #007bff;
+}
+
+/* Кнопка с иконкой — справа от поля */
+.send-comment-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-left: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Анимация при наведении */
+.send-comment-btn:hover {
+  background-color: #0056b3;
+}
+
+.send-comment-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
 
 /* ========== Mobile адаптив ========== */
 @media (orientation: portrait) {
@@ -267,9 +348,6 @@
     width: 100%;
   }
 
-  .close-comments-btn {
-    margin-right: 9%;
-  }
 
   .video-section {
     padding: 0;
@@ -286,13 +364,13 @@
     left: 0;
     right: 0;
     height: 70dvh;
-    width: 100%;
+    width: calc(100% - 32px);
     background-color: #fff;
     border-top: 1px solid #ddd;
 
     transform: translateY(100%);
     transition: transform 0.3s ease;
-    z-index: 15;
+    z-index: 50;
   }
 
   .comment-section.open {

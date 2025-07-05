@@ -1,7 +1,7 @@
 import Sidebar from "./components/Sidebar";
 import { useState, useEffect, useRef, useCallback } from "react";
 import './styles/main.css';
-import { FiThumbsUp, FiThumbsDown, FiX } from "react-icons/fi";
+import { FiThumbsUp, FiThumbsDown, FiX, FiArrowUp } from "react-icons/fi";
 import CustomVideoPlayer from "./components/CustomVideoPlayer";
 
 const fetchComments = async (videoId) => {
@@ -34,7 +34,6 @@ const likeComment = async (commentId, like) => {
     const response = await fetch(`https://api.vickz.ru/like-comment/${commentId}?like=${like}`, {
       method: 'POST',
       headers: { 
-        // 'Content-Type': 'application/json',
         'Authorization': `Bearer ${access_token}`
       },
     });
@@ -79,11 +78,44 @@ const fetchNextVideo = async (index) => {
   }
 };
 
+const sendComment = async (videoId, commentText) => {
+  const access_token = localStorage.getItem('access_token');
+
+  if (!access_token) {
+    console.error('Токен не найден');
+    window.location.href = '/#/login'
+    return null;
+  }
+
+  try {
+    const response = await fetch(`https://api.vickz.ru/add-comment/${videoId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain',
+        'Authorization': `Bearer ${access_token}`
+      },
+      body: commentText
+    });
+
+    if (!response.ok) {
+      console.error('Ошибка при отправке комментария:', response.statusText);
+      return null;
+    }
+
+    const result = await response.json();
+    return result; // Предполагаем, что сервер вернёт созданный комментарий
+  } catch (error) {
+    console.error('Ошибка при отправке комментария:', error);
+    return null;
+  }
+};
+
 function MainPage() {
   const [showComments, setShowComments] = useState(false);
   const [videos, setVideos] = useState([null]);
   const [comments, setComments] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [newComment, setNewComment] = useState('');
 
   const loadingQueue = useRef([]);
   const loadingInProgress = useRef(false);
@@ -143,6 +175,28 @@ function MainPage() {
     );
   };
 
+  const handleSendComment = async () => {
+    if (!newComment.trim() || !videos[currentIndex]) return;
+
+    const result = await sendComment(videos[currentIndex].id, newComment.trim());
+    console.log(result)
+    if (result) {
+      setComments((prev) => [
+        ...prev,
+        {
+          ...result,
+          user_id: localStorage.getItem('id'),
+          content: newComment.trim(),
+          likes: 0,
+          dislikes: 0,
+          liked: false,
+          disliked: false
+        }
+      ]);
+      setNewComment('');
+    }
+  };
+
   const loadVideoAtIndex = useCallback(async (index) => {
     if (loadingInProgress.current) return;
     loadingInProgress.current = true;
@@ -193,6 +247,13 @@ function MainPage() {
   useEffect(() => {
     enqueueLoad(0);
   }, [enqueueLoad]);
+  const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+
+  useEffect(() => {
+    if (!isPortrait && showComments) {
+      setShowComments(false);
+    }
+  }, [currentIndex, isPortrait]);
 
   const observers = useRef([]);
   const videoRefs = useRef([]);
@@ -220,8 +281,6 @@ function MainPage() {
       observers.current.forEach((observer) => observer.disconnect());
     };
   }, [videos]);
-
-  const isPortrait = window.matchMedia('(orientation: portrait)').matches;
 
   return (
     <div className="main-layout">
@@ -258,6 +317,7 @@ function MainPage() {
             <h3>{comments.length} Comments</h3>
             <button className="close-comments-btn" onClick={toggleComments}><FiX size={25} /></button>
           </div>
+
           <div className="comments-content">
             {comments.length > 0 ? (
               comments.map((comment, i) => (
@@ -290,8 +350,19 @@ function MainPage() {
                 </div>
               ))
             ) : (
-              <p>Комментариев пока нет.</p>
+              <p className="no-comments">there is no comments</p>
             )}
+          </div>
+
+          <div className="comment-input-section">
+            <input
+              type="text"
+              className="comment-input"
+              placeholder="Write a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button className="send-comment-btn" onClick={handleSendComment}><FiArrowUp /></button>
           </div>
         </div>
       </div>
