@@ -1,13 +1,9 @@
-/* Сброс box-sizing */
-
-/* Основной layout */
 .main-layout {
   display: flex;
-  height: 100dvh; /* Стабильно на десктопе */
+  height: 100dvh;
   overflow: hidden;
 }
 
-/* Видео секция */
 .video-section {
   width: 55dvh;
   display: flex;
@@ -24,6 +20,7 @@
   margin: 3px;
   cursor: pointer;
 }
+
 .like-btn.active {
   color: #3b82f6;
 }
@@ -34,12 +31,11 @@
   border: none;
   background: none;
 }
+
 .dislike-btn.active {
   color: #3b82f6;
 }
 
-
-/* Кнопки действий */
 .action-buttons {
   position: absolute;
   right: 40px;
@@ -64,55 +60,8 @@
   color: #4b5563;
   background: none;
   border: none;
-  /* padding: 12px; */
-  /* border-radius: 50%; */
   cursor: pointer;
   font-size: 20px;
-  /* box-shadow: 0 4px 6px rgba(0,0,0,1); */
-}
-
-/* Комментарии */
-.comment-section {
-  position: fixed;
-  right: 0;
-  width: 25%;
-  background-color: #fff;
-  padding: 16px;
-  height: 100dvh;
-  overflow-y: auto;
-  border-left: 1px solid #e5e7eb;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  pointer-events: none;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-}
-
-.comment-section.open {
-  transform: translateX(0);
-  pointer-events: auto;
-}
-
-.comments-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.comments-content {
-  font-size: 14px;
-  color: #333;
-  flex: 1;
-  overflow-y: auto; /* Чтобы список комментариев мог прокручиваться */
-  padding-bottom: 60px; /* Чтобы не перекрывать поле ввода */
-}
-
-.close-comments-btn {
-  background-color: white;
-  cursor: pointer;
-  border: none;
 }
 
 .content-area {
@@ -126,7 +75,7 @@
 }
 
 .content-area.with-comments {
-  padding-right: 25vw; /* резервируем место под comments */
+  padding-right: 25vw;
 }
 
 .video-scroll-container {
@@ -146,16 +95,28 @@
   align-items: center;
 }
 
-/* Скрыть скроллбар */
 .video-scroll-container.no-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE/Edge */
-}
-.video-scroll-container.no-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome/Safari */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Лоадер-заглушка */
+.video-scroll-container.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.back-button {
+  position: absolute;
+  top: 1.5dvh;
+  padding: 12px;
+  left: calc(50% - 27.5dvh - 50px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  filter: drop-shadow(1px 1px 2px black);
+  z-index: 50;
+}
+
 .loading-placeholder {
   width: 55dvh;
   height: 97dvh;
@@ -182,22 +143,6 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Фикс заголовка в комментариях */
-.comments-header {
-  position: sticky;
-  top: 0;
-  background-color: white;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #ddd;
-  
-}
-
-/* Оверлей, чтобы клики вне закрывали комментарии */
 .mobile-overlay {
   position: fixed;
   top: 0;
@@ -208,142 +153,21 @@
   z-index: 25;
 }
 
-/* Блокировка прокрутки видео при открытых комментариях на мобилке */
 .video-scroll-container.lock-scroll {
   overflow: hidden;
-}
-
-.comment-item {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.comment-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.comment-body {
-  flex: 1;
-}
-
-.comment-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.comment-likes {
-  display: flex;
-  font-size: 12px;
-  color: #333; /* Красное сердечко */
-  align-items: center;
-  justify-content: center;
-  width: 30%;
-  gap: 3px;
-}
-
-.comment-text {
-  font-size: 14px;
-  color: #333;
-  margin: 0;
-}
-
-.no-comments {
-  width: 100%;
-  font-size: 20px;
-  height: 30dvh;
-  display: flex;
-  font-weight: bold;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #666;
-}
-
-/* Поле ввода комментария */
-/* Контейнер поля ввода — фиксируем снизу секции комментариев */
-.comment-input-section {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  flex-direction: row;
-  border-top: 1px solid #ddd;
-  background-color: #fff;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-@media (orientation: landscape) {
-  .comment-input-section {
-    bottom: 20px;
-  }
-}
-
-/* Поле ввода на всю доступную ширину */
-.comment-input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  font-size: 14px;
-  min-width: 0px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-/* Анимация при фокусе */
-.comment-input:focus {
-  border-color: #007bff;
-}
-
-/* Кнопка с иконкой — справа от поля */
-.send-comment-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px;
-  margin-left: 10px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-/* Анимация при наведении */
-.send-comment-btn:hover {
-  background-color: #0056b3;
-}
-
-.send-comment-btn svg {
-  width: 20px;
-  height: 20px;
 }
 
 .black-link {
   color: black;
 }
 
-
-/* ========== Mobile адаптив ========== */
 @media (orientation: portrait) {
   .main-layout {
     flex-direction: column;
     padding-left: 0;
     height: 100dvh;
   }
-  
+
   .content-area.with-comments {
     padding-right: 0;
   }
@@ -351,7 +175,6 @@
   .video-scroll-container {
     width: 100%;
   }
-
 
   .video-section {
     padding: 0;
@@ -362,38 +185,17 @@
     height: 100dvh;
   }
 
-  .comment-section {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 70dvh;
-    width: calc(100% - 32px);
-    background-color: #fff;
-    border-top: 1px solid #ddd;
-
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    z-index: 50;
-  }
-
-  .comment-section.open {
-    transform: translateY(0);
-  }
-
-  .comments-content {
-    font-size: 14px;
-    color: #333;
-
-    /* Новые строки ↓ */
-    max-height: calc(70dvh - 48px); /* 50dvh (высота блока) минус примерная высота header */
-    overflow-y: auto;
-  }
-
   .loading-placeholder {
     border-radius: 0;
     margin: 0;
     height: 100dvh;
     width: 100%;
   }
+
+  .back-button {
+    left: 0;
+    top: 0;
+    padding: 20px;
+  }
+
 }

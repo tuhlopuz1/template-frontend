@@ -34,7 +34,7 @@ const Sidebar = () => {
           onClick={toggleSidebar}
           className="menu-toggle"
         >
-          {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          {isOpen ? null : <FiMenu size={30} />}
         </button>
       </div>
 

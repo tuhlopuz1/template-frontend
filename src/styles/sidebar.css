@@ -10,7 +10,10 @@
   }
   
   .menu-toggle {
-    padding: 8px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 20px;
     border-radius: 6px;
     color: white;
     background: none;

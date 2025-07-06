@@ -1,15 +1,17 @@
 import Sidebar from "./components/Sidebar";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import './styles/main.css';
-import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2, FiHeart } from "react-icons/fi";
 import CustomVideoPlayer from "./components/CustomVideoPlayer";
+import CommentsSection from './components/Comments';
+import { FiArrowLeft } from "react-icons/fi";
 
 function WatchPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
+
     const [showComments, setShowComments] = useState(false);
     const [video, setVideo] = useState(null);
-    const [comments, setComments] = useState([]);
 
     const toggleComments = () => {
         setShowComments((prev) => !prev);
@@ -51,30 +53,17 @@ function WatchPage() {
         }
     }, [id]);
 
-    useEffect(() => {
-        const exampleComments = [
-            {
-                author: "user_commenter1",
-                avatar: "https://randomuser.me/api/portraits/men/5.jpg",
-                content: "Очень крутое видео!",
-                likes: 12
-            },
-            {
-                author: "user_commenter2",
-                avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-                content: "Спасибо за полезный контент.",
-                likes: 7
-            }
-        ];
-        setComments(exampleComments);
-    }, []);
-
     const isPortrait = window.matchMedia('(orientation: portrait)').matches;
 
     return (
         <div className="main-layout">
             <Sidebar />
             <div className={`content-area ${showComments ? 'with-comments' : ''}`}>
+
+                {/* Кнопка назад */}
+                <button className="back-button" onClick={() => navigate(-1)}>
+                    <FiArrowLeft size={30}/>
+                </button>
 
                 {showComments && isPortrait && (
                     <div className="mobile-overlay" onClick={toggleComments}></div>
@@ -96,30 +85,13 @@ function WatchPage() {
                     </div>
                 </div>
 
-                <div className={`comment-section ${showComments ? 'open' : ''}`}>
-                    <div className="comments-header">
-                        <h3>{comments.length} Comments</h3>
-                        <button className="close-comments-btn" onClick={toggleComments}><FiX size={25} /></button>
-                    </div>
-                    <div className="comments-content">
-                        {comments.length > 0 ? (
-                            comments.map((comment, i) => (
-                                <div key={i} className="comment-item">
-                                    <img src={comment.avatar} alt={comment.author} className="comment-avatar" />
-                                    <div className="comment-body">
-                                        <div className="comment-header">
-                                            <strong>{comment.author}</strong>
-                                            <div className="comment-likes"><FiHeart /> {comment.likes}</div>
-                                        </div>
-                                        <p className="comment-text">{comment.content}</p>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>Загрузка комментариев...</p>
-                        )}
-                    </div>
-                </div>
+                {video && (
+                    <CommentsSection
+                        videoId={video.id}
+                        showComments={showComments}
+                        toggleComments={toggleComments}
+                    />
+                )}
             </div>
         </div>
     );
