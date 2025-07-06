@@ -3,10 +3,14 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import './styles/main.css';
 import { FiThumbsUp, FiThumbsDown, FiX, FiArrowUp } from "react-icons/fi";
 import CustomVideoPlayer from "./components/CustomVideoPlayer";
+import apiRequest from './components/Requests'; // если ты выносишь apiRequest в отдельный файл
+import { Link } from 'react-router-dom'
 
 const fetchComments = async (videoId) => {
   try {
-    const response = await fetch(`https://api.vickz.ru/get-comments/${videoId}`);
+    const response = await apiRequest({
+      url: `https://api.vickz.ru/get-comments/${videoId}`
+    });
 
     if (!response.ok) {
       console.error('Ошибка загрузки комментариев:', response.statusText);
@@ -22,25 +26,17 @@ const fetchComments = async (videoId) => {
 };
 
 const likeComment = async (commentId, like) => {
-  const access_token = localStorage.getItem('access_token');
-
-  if (!access_token) {
-    console.error('Токен не найден');
-    window.location.href = '/#/login'
-    return;
-  }
-
   try {
-    const response = await fetch(`https://api.vickz.ru/like-comment/${commentId}?like=${like}`, {
+    const response = await apiRequest({
+      url: `https://api.vickz.ru/like-comment/${commentId}`,
       method: 'POST',
-      headers: { 
-        'Authorization': `Bearer ${access_token}`
-      },
+      params: { like },
+      auth: true
     });
 
     if (!response.ok) {
       console.error('Ошибка при отправке лайка/дизлайка:', response.statusText);
-      console.log(response)
+      console.log(response);
     }
   } catch (error) {
     console.error('Ошибка при отправке лайка/дизлайка:', error);
@@ -48,21 +44,10 @@ const likeComment = async (commentId, like) => {
 };
 
 const fetchNextVideo = async (index) => {
-  const access_token = localStorage.getItem('access_token');
-
-  if (!access_token) {
-    localStorage.clear();
-    window.location.href = '/';
-    return null;
-  }
-
   try {
-    const response = await fetch('https://api.vickz.ru/get-video', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${access_token}`
-      }
+    const response = await apiRequest({
+      url: 'https://api.vickz.ru/get-video',
+      auth: true
     });
 
     if (!response.ok) {
@@ -79,21 +64,11 @@ const fetchNextVideo = async (index) => {
 };
 
 const sendComment = async (videoId, commentText) => {
-  const access_token = localStorage.getItem('access_token');
-
-  if (!access_token) {
-    console.error('Токен не найден');
-    window.location.href = '/#/login'
-    return null;
-  }
-
   try {
-    const response = await fetch(`https://api.vickz.ru/add-comment/${videoId}`, {
+    const response = await apiRequest({
+      url: `https://api.vickz.ru/add-comment/${videoId}`,
       method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain',
-        'Authorization': `Bearer ${access_token}`
-      },
+      auth: true,
       body: commentText
     });
 
@@ -103,7 +78,7 @@ const sendComment = async (videoId, commentText) => {
     }
 
     const result = await response.json();
-    return result; // Предполагаем, что сервер вернёт созданный комментарий
+    return result;
   } catch (error) {
     console.error('Ошибка при отправке комментария:', error);
     return null;
@@ -124,10 +99,9 @@ function MainPage() {
   const toggleComments = async () => {
     if (!showComments && videos[currentIndex]) {
       const loadedComments = await fetchComments(videos[currentIndex].id);
+      console.log(loadedComments)
       setComments(loadedComments.map(comment => ({
         ...comment,
-        liked: false,
-        disliked: false
       })));
     }
     setShowComments((prev) => !prev);
@@ -137,15 +111,15 @@ function MainPage() {
     setComments((prev) =>
       prev.map((comment) => {
         if (comment.id === commentId) {
-          const isLiked = !comment.liked;
-          if (isLiked && comment.disliked) {
+          const isLiked = !comment.is_liked_by_user;
+          if (isLiked && comment.is_disliked_by_user) {
             comment.dislikes -= 1;
-            comment.disliked = false;
+            comment.is_disliked_by_user = false;
           }
           likeComment(commentId, true);
           return {
             ...comment,
-            liked: isLiked,
+            is_liked_by_user: isLiked,
             likes: isLiked ? comment.likes + 1 : comment.likes - 1
           };
         }
@@ -158,15 +132,15 @@ function MainPage() {
     setComments((prev) =>
       prev.map((comment) => {
         if (comment.id === commentId) {
-          const isDisliked = !comment.disliked;
-          if (isDisliked && comment.liked) {
+          const isDisliked = !comment.is_disliked_by_user;
+          if (isDisliked && comment.is_liked_by_user) {
             comment.likes -= 1;
-            comment.liked = false;
+            comment.is_liked_by_user = false;
           }
           likeComment(commentId, false);
           return {
             ...comment,
-            disliked: isDisliked,
+            is_disliked_by_user: isDisliked,
             dislikes: isDisliked ? comment.dislikes + 1 : comment.dislikes - 1
           };
         }
@@ -179,7 +153,6 @@ function MainPage() {
     if (!newComment.trim() || !videos[currentIndex]) return;
 
     const result = await sendComment(videos[currentIndex].id, newComment.trim());
-    console.log(result)
     if (result) {
       setComments((prev) => [
         ...prev,
@@ -247,6 +220,7 @@ function MainPage() {
   useEffect(() => {
     enqueueLoad(0);
   }, [enqueueLoad]);
+
   const isPortrait = window.matchMedia('(orientation: portrait)').matches;
 
   useEffect(() => {
@@ -322,23 +296,27 @@ function MainPage() {
             {comments.length > 0 ? (
               comments.map((comment, i) => (
                 <div key={i} className="comment-item">
-                  <img
-                    src={`https://api.vickz.ru/get-profile-picture/${comment.user_id}`}
-                    alt={comment.user_id}
-                    className="comment-avatar"
-                  />
+                  <Link to = {`/user/${comment.user_username}`}>
+                    <img
+                      src={`https://api.vickz.ru/get-profile-picture/${comment.user_id}`}
+                      alt={comment.user_id}
+                      className="comment-avatar"
+                    />
+                  </Link>
                   <div className="comment-body">
                     <div className="comment-header">
-                      <strong>{comment.user_id}</strong>
+                        <Link to = {`/user/${comment.user_username}`} className="black-link">
+                            <strong>{comment.user_name}</strong>
+                        </Link>
                       <div className="comment-actions">
                         <button
-                          className={`like-btn ${comment.liked ? 'active' : ''}`}
+                          className={`like-btn ${comment.is_liked_by_user ? 'active' : ''}`}
                           onClick={() => handleLike(comment.id)}
                         >
                           <FiThumbsUp /> {comment.likes}
                         </button>
                         <button
-                          className={`dislike-btn ${comment.disliked ? 'active' : ''}`}
+                          className={`dislike-btn ${comment.is_disliked_by_user ? 'active' : ''}`}
                           onClick={() => handleDislike(comment.id)}
                         >
                           <FiThumbsDown /> {comment.dislikes}
@@ -350,7 +328,7 @@ function MainPage() {
                 </div>
               ))
             ) : (
-              <p className="no-comments">there is no comments</p>
+              <p className="no-comments">There are no comments</p>
             )}
           </div>
 
