@@ -10,7 +10,7 @@ const fetchNextVideo = async (index) => {
 
   if (!access_token) {
     localStorage.clear();
-    window.location.href = '/';
+    window.location.href = '/#/login';
     return null;
   }
 
