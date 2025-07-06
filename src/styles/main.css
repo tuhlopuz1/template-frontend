@@ -331,6 +331,10 @@
   height: 20px;
 }
 
+.black-link {
+  color: black;
+}
+
 
 /* ========== Mobile адаптив ========== */
 @media (orientation: portrait) {
