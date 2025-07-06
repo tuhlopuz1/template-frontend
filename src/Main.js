@@ -1,10 +1,52 @@
 import Sidebar from "./components/Sidebar";
 import { useState, useEffect, useRef, useCallback } from "react";
 import './styles/main.css';
-import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiX, FiShare2, FiHeart } from "react-icons/fi";
+import { FiThumbsUp, FiThumbsDown, FiX, FiArrowUp } from "react-icons/fi";
 import CustomVideoPlayer from "./components/CustomVideoPlayer";
 
-// Фейковая функция для подгрузки
+const fetchComments = async (videoId) => {
+  try {
+    const response = await fetch(`https://api.vickz.ru/get-comments/${videoId}`);
+
+    if (!response.ok) {
+      console.error('Ошибка загрузки комментариев:', response.statusText);
+      return [];
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error('Ошибка при загрузке комментариев:', error);
+    return [];
+  }
+};
+
+const likeComment = async (commentId, like) => {
+  const access_token = localStorage.getItem('access_token');
+
+  if (!access_token) {
+    console.error('Токен не найден');
+    window.location.href = '/#/login'
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.vickz.ru/like-comment/${commentId}?like=${like}`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${access_token}`
+      },
+    });
+
+    if (!response.ok) {
+      console.error('Ошибка при отправке лайка/дизлайка:', response.statusText);
+      console.log(response)
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке лайка/дизлайка:', error);
+  }
+};
+
 const fetchNextVideo = async (index) => {
   const access_token = localStorage.getItem('access_token');
 
@@ -29,10 +71,41 @@ const fetchNextVideo = async (index) => {
     }
 
     const result = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.error('Произошла ошибка:', error);
+    return null;
+  }
+};
+
+const sendComment = async (videoId, commentText) => {
+  const access_token = localStorage.getItem('access_token');
+
+  if (!access_token) {
+    console.error('Токен не найден');
+    window.location.href = '/#/login'
+    return null;
+  }
+
+  try {
+    const response = await fetch(`https://api.vickz.ru/add-comment/${videoId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain',
+        'Authorization': `Bearer ${access_token}`
+      },
+      body: commentText
+    });
+
+    if (!response.ok) {
+      console.error('Ошибка при отправке комментария:', response.statusText);
+      return null;
+    }
+
+    const result = await response.json();
+    return result; // Предполагаем, что сервер вернёт созданный комментарий
+  } catch (error) {
+    console.error('Ошибка при отправке комментария:', error);
     return null;
   }
 };
@@ -42,29 +115,87 @@ function MainPage() {
   const [videos, setVideos] = useState([null]);
   const [comments, setComments] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [newComment, setNewComment] = useState('');
 
   const loadingQueue = useRef([]);
   const loadingInProgress = useRef(false);
   const loadedIndexes = useRef(new Set());
 
-  const toggleComments = () => {
+  const toggleComments = async () => {
+    if (!showComments && videos[currentIndex]) {
+      const loadedComments = await fetchComments(videos[currentIndex].id);
+      setComments(loadedComments.map(comment => ({
+        ...comment,
+        liked: false,
+        disliked: false
+      })));
+    }
     setShowComments((prev) => !prev);
   };
 
-  const exampleComments = [
-    {
-      author: "user_commenter1",
-      avatar: "https://randomuser.me/api/portraits/men/5.jpg",
-      content: "Очень крутое видео!",
-      likes: 12
-    },
-    {
-      author: "user_commenter2",
-      avatar: "https://randomuser.me/api/portraits/women/6.jpg",
-      content: "Спасибо за полезный контент.",
-      likes: 7
+  const handleLike = async (commentId) => {
+    setComments((prev) =>
+      prev.map((comment) => {
+        if (comment.id === commentId) {
+          const isLiked = !comment.liked;
+          if (isLiked && comment.disliked) {
+            comment.dislikes -= 1;
+            comment.disliked = false;
+          }
+          likeComment(commentId, true);
+          return {
+            ...comment,
+            liked: isLiked,
+            likes: isLiked ? comment.likes + 1 : comment.likes - 1
+          };
+        }
+        return comment;
+      })
+    );
+  };
+
+  const handleDislike = async (commentId) => {
+    setComments((prev) =>
+      prev.map((comment) => {
+        if (comment.id === commentId) {
+          const isDisliked = !comment.disliked;
+          if (isDisliked && comment.liked) {
+            comment.likes -= 1;
+            comment.liked = false;
+          }
+          likeComment(commentId, false);
+          return {
+            ...comment,
+            disliked: isDisliked,
+            dislikes: isDisliked ? comment.dislikes + 1 : comment.dislikes - 1
+          };
+        }
+        return comment;
+      })
+    );
+  };
+
+  const handleSendComment = async () => {
+    if (!newComment.trim() || !videos[currentIndex]) return;
+
+    const result = await sendComment(videos[currentIndex].id, newComment.trim());
+    console.log(result)
+    if (result) {
+      setComments((prev) => [
+        ...prev,
+        {
+          ...result,
+          user_id: localStorage.getItem('id'),
+          content: newComment.trim(),
+          likes: 0,
+          dislikes: 0,
+          liked: false,
+          disliked: false
+        }
+      ]);
+      setNewComment('');
     }
-  ];
+  };
 
   const loadVideoAtIndex = useCallback(async (index) => {
     if (loadingInProgress.current) return;
@@ -116,6 +247,13 @@ function MainPage() {
   useEffect(() => {
     enqueueLoad(0);
   }, [enqueueLoad]);
+  const isPortrait = window.matchMedia('(orientation: portrait)').matches;
+
+  useEffect(() => {
+    if (!isPortrait && showComments) {
+      setShowComments(false);
+    }
+  }, [currentIndex, isPortrait]);
 
   const observers = useRef([]);
   const videoRefs = useRef([]);
@@ -144,13 +282,6 @@ function MainPage() {
     };
   }, [videos]);
 
-  useEffect(() => {
-    setComments(exampleComments);
-  }, []);
-
-  const isPortrait = window.matchMedia('(orientation: portrait)').matches;
-  const actionBtnSize = 30;
-
   return (
     <div className="main-layout">
       <Sidebar />
@@ -173,11 +304,9 @@ function MainPage() {
                   isActive={index === currentIndex}
                 />
               ) : (
-                <>
-                  <div className="loading-placeholder">
-                    <div className="loader" />
-                  </div>
-                </>
+                <div className="loading-placeholder">
+                  <div className="loader" />
+                </div>
               )}
             </div>
           ))}
@@ -188,23 +317,52 @@ function MainPage() {
             <h3>{comments.length} Comments</h3>
             <button className="close-comments-btn" onClick={toggleComments}><FiX size={25} /></button>
           </div>
+
           <div className="comments-content">
             {comments.length > 0 ? (
               comments.map((comment, i) => (
                 <div key={i} className="comment-item">
-                  <img src={comment.avatar} alt={comment.author} className="comment-avatar" />
+                  <img
+                    src={`https://api.vickz.ru/get-profile-picture/${comment.user_id}`}
+                    alt={comment.user_id}
+                    className="comment-avatar"
+                  />
                   <div className="comment-body">
                     <div className="comment-header">
-                      <strong>{comment.author}</strong>
-                      <div className="comment-likes"><FiHeart /> {comment.likes}</div>
+                      <strong>{comment.user_id}</strong>
+                      <div className="comment-actions">
+                        <button
+                          className={`like-btn ${comment.liked ? 'active' : ''}`}
+                          onClick={() => handleLike(comment.id)}
+                        >
+                          <FiThumbsUp /> {comment.likes}
+                        </button>
+                        <button
+                          className={`dislike-btn ${comment.disliked ? 'active' : ''}`}
+                          onClick={() => handleDislike(comment.id)}
+                        >
+                          <FiThumbsDown /> {comment.dislikes}
+                        </button>
+                      </div>
                     </div>
                     <p className="comment-text">{comment.content}</p>
                   </div>
                 </div>
               ))
             ) : (
-              <p>Загрузка комментариев...</p>
+              <p className="no-comments">there is no comments</p>
             )}
+          </div>
+
+          <div className="comment-input-section">
+            <input
+              type="text"
+              className="comment-input"
+              placeholder="Write a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+            />
+            <button className="send-comment-btn" onClick={handleSendComment}><FiArrowUp /></button>
           </div>
         </div>
       </div>

@@ -1,46 +1,48 @@
 import { useRef, useState, useEffect } from "react";
-import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiShare2, FiPlay, FiMusic, FiHeart } from "react-icons/fi";
+import { FiThumbsUp, FiThumbsDown, FiMessageCircle, FiShare2, FiPlay, FiMusic } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import "../styles/player.css";
 
 function CustomVideoPlayer({ video, toggleComments, isActive }) {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
-  const pauseTimeout = useRef(null);
-  const lastClickTime = useRef(0);
+  const clickTimeout = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
   const [isLiked, setIsLiked] = useState(video.is_liked_by_user);
   const [likeCount, setLikeCount] = useState(video.likes);
+
+  const [isDisliked, setIsDisliked] = useState(video.is_disliked_by_user);
+  const [dislikeCount, setDislikeCount] = useState(video.dislikes);
+
   const [showLikeAnimation, setShowLikeAnimation] = useState(false);
-  const clickTimeout = useRef(null);
 
   const actionBtnSize = 30;
 
   // =====================
   // ОДИНОЧНЫЙ И ДВОЙНОЙ КЛИК
   // =====================
-const handleVideoClick = (e) => {
-  if (clickTimeout.current) {
-    clearTimeout(clickTimeout.current);
-    clickTimeout.current = null;
-  }
-
-  if (e.detail === 2) {
-    // Двойной клик
-    handleLike();
-    triggerLikeAnimation();
-  } else if (e.detail === 1) {
-    // Устанавливаем таймер для одиночного клика
-    clickTimeout.current = setTimeout(() => {
-      togglePlay();
+  const handleVideoClick = (e) => {
+    if (clickTimeout.current) {
+      clearTimeout(clickTimeout.current);
       clickTimeout.current = null;
-    }, 250); // 250ms - стандартная задержка ожидания второго клика
-  }
-};
+    }
 
+    if (e.detail === 2) {
+      // Двойной клик
+      handleLike();
+      triggerLikeAnimation();
+    } else if (e.detail === 1) {
+      // Одиночный клик
+      clickTimeout.current = setTimeout(() => {
+        togglePlay();
+        clickTimeout.current = null;
+      }, 250);
+    }
+  };
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -56,26 +58,59 @@ const handleVideoClick = (e) => {
 
   const handleLike = async () => {
     const access_token = localStorage.getItem('access_token');
-    if (!access_token) return;
+    if (!access_token) {
+      window.location.href = '/#/login';
+      return;
+    }
 
     const newLikeState = !isLiked;
     setIsLiked(newLikeState);
     setLikeCount(prev => newLikeState ? prev + 1 : prev - 1);
 
+    // Если пользователь лайкает, автоматически убираем дизлайк
+    if (newLikeState && isDisliked) {
+      setIsDisliked(false);
+      setDislikeCount(prev => prev - 1);
+    }
+
     try {
-      await fetch('https://api.vickz.ru/like-video', {
+      await fetch(`https://api.vickz.ru/like-video?uuid=${video.id}&like=${true}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${access_token}`
-        },
-        body: JSON.stringify({
-          videoId: video.id,
-          like: newLikeState
-        })
+        }
       });
     } catch (error) {
       console.error('Ошибка при отправке лайка:', error);
+    }
+  };
+
+  const handleDislike = async () => {
+    const access_token = localStorage.getItem('access_token');
+    if (!access_token) {
+      window.location.href = '/#/login';
+      return;
+    }
+
+    const newDislikeState = !isDisliked;
+    setIsDisliked(newDislikeState);
+    setDislikeCount(prev => newDislikeState ? prev + 1 : prev - 1);
+
+    // Если пользователь дизлайкает, автоматически убираем лайк
+    if (newDislikeState && isLiked) {
+      setIsLiked(false);
+      setLikeCount(prev => prev - 1);
+    }
+
+    try {
+      await fetch(`https://api.vickz.ru/like-video?uuid=${video.id}&like=${false}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${access_token}`
+        }
+      });
+    } catch (error) {
+      console.error('Ошибка при отправке дизлайка:', error);
     }
   };
 
@@ -114,10 +149,6 @@ const handleVideoClick = (e) => {
       videoRef.current.currentTime = 0;
       videoRef.current.play();
     }
-  };
-
-  const checkSound = () => {
-    console.log('check sound');
   };
 
   // Автовоспроизведение по Intersection Observer
@@ -197,10 +228,10 @@ const handleVideoClick = (e) => {
         </button>
         <p className="stat-amount">{likeCount}</p>
 
-        <button className={`action-btn dislike ${video.is_disliked_by_user ? 'disliked' : ''}`}>
+        <button className={`action-btn dislike ${isDisliked ? 'liked' : ''}`} onClick={handleDislike}>
           <FiThumbsDown size={actionBtnSize} />
         </button>
-        <p className="stat-amount">{video.dislikes}</p>
+        <p className="stat-amount">{dislikeCount}</p>
 
         <button className="action-btn comment-toggle" onClick={toggleComments}>
           <FiMessageCircle size={actionBtnSize} />
@@ -215,12 +246,12 @@ const handleVideoClick = (e) => {
 
       <div className="video-info-bar">
         <div className="video-info-header">
-	<Link to={`/user/${video.author_username}`}>
-          <img src={`https://api.vickz.ru/get-profile-picture/${video.author_id}`} alt={video.author} className="author-avatar" />
-	</Link>
-	<Link to={`/user/${video.author_username}`}>
-          <p className="author-nickname">{video.author_name}</p>
-	</Link>
+          <Link to={`/user/${video.author_username}`}>
+            <img src={`https://api.vickz.ru/get-profile-picture/${video.author_id}`} alt={video.author} className="author-avatar" />
+          </Link>
+          <Link to={`/user/${video.author_username}`}>
+            <p className="author-nickname">{video.author_name}</p>
+          </Link>
           <button className={`subscribe-btn ${video.isSubscribed ? 'subscribed' : ''}`}>
             {video.isSubscribed ? "Unfollow" : "Follow"}
           </button>
@@ -230,7 +261,7 @@ const handleVideoClick = (e) => {
 
       <div className="sound-description-panel">
         <Link to="/#/sounds" className="row">
-          <FiMusic onClick={checkSound} className="music-icon" size={15} />
+          <FiMusic className="music-icon" size={15} />
           <p className="sound-name">original sound</p>
         </Link>
       </div>

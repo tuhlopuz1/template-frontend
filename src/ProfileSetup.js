@@ -32,41 +32,58 @@ const ProfileSetupPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError('');
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('avatar', formData.avatar);
-    formDataToSend.append('bio', formData.bio);
+    const token = localStorage.getItem('access_token');
 
-    fetch('https://api.vickz.ru/profile-setup', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-      },
-      body: formDataToSend
-    })
-      .then(response => {
-        if (!response.ok) {
-          return response.json().then(errorData => {
-            throw new Error(errorData.msg || 'Profile setup error');
-          });
-        }
-        return response.json();
-      })
-      .then(result => {
-        console.log('Profile setup response:', result);
-        navigate('/main');
-      })
-      .catch(error => {
-        console.error('Error occurred:', error);
-        setServerError(error.message);
+    try {
+      // Первый запрос: обновляем описание
+      const descriptionResponse = await fetch('https://api.vickz.ru/update-profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ description: formData.bio })
       });
+
+      if (!descriptionResponse.ok) {
+        const errorData = await descriptionResponse.json();
+        throw new Error(errorData.msg || 'Error updating description');
+      }
+
+      // Второй запрос: загружаем аватар
+      if (formData.avatar) {
+        const avatarData = new FormData();
+        avatarData.append('file', formData.avatar);
+
+        const avatarResponse = await fetch('https://api.vickz.ru/profile-picture', {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: avatarData
+        });
+
+        if (!avatarResponse.ok) {
+          const errorData = await avatarResponse.json();
+          console.log(errorData)
+          throw new Error(errorData.msg || 'Error uploading avatar');
+        }
+      }
+
+      navigate('/main');
+
+    } catch (error) {
+      console.error('Error occurred:', error);
+      setServerError(error.message);
+    }
   };
 
   const handleSkip = () => {
-    window.location.href = '/#/main'
+    window.location.href = '/#/main';
   };
 
   return (
