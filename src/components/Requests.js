@@ -33,15 +33,16 @@ async function apiRequest({
     params = {},
     body = null,
     auth = false,
-    retry = true
+    retry = true,
+    headers = {
+        'Content-Type': 'application/json',
+    }
 }) {
     // Параметры в строку
     const queryString = new URLSearchParams(params).toString();
     const fullUrl = queryString ? `${url}?${queryString}` : url;
 
-    const headers = {
-        'Content-Type': 'application/json',
-    };
+
 
     if (auth) {
         headers['Authorization'] = `Bearer ${getAccessToken()}`;
@@ -52,9 +53,10 @@ async function apiRequest({
         headers,
     };
 
-    if (body) {
+    if (body){
         options.body = JSON.stringify(body);
     }
+
 
     let response = await fetch(fullUrl, options);
 

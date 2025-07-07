@@ -4,7 +4,7 @@ import Logo from './components/Logo';
 import { validateLogin } from './components/validation';
 import './styles/signup.css';
 import Navbar from './components/NavBar';
-
+import apiRequest from './components/Requests';
 
 const LogInPage = () => {
   
@@ -25,51 +25,67 @@ const LogInPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    console.log(formData)
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const validationResult = validateLogin(formData);
-    formData.username = formData.identifier
-    console.log(validationResult)
-    if (validationResult.isValid) {
-      
+  const validationResult = validateLogin(formData);
+  formData.username = formData.identifier;
 
-      fetch('https://api.vickz.ru/token', {
+  if (validationResult.isValid) {
+    try {
+      const response = await fetch('https://api.vickz.ru/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
-      })
-        .then(response => {
-          console.log(response)
-          if (!response.ok) {
-            return response.json().then(errorData => {
-              throw new Error(errorData.msg || 'Login error');
-            });
-          }
-          return response.json();
-        })
-        .then(result => {
-          console.log('Ответ от сервера:', result);
+      });
 
-          localStorage.setItem('access_token', result.access_token)
-          localStorage.setItem('refresh_token', result.refresh_token)
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.msg || 'Login error');
+      }
 
+      const result = await response.json();
+      console.log('Ответ от сервера:', result);
 
-          window.location.href = '#/main';
-        })
-        .catch(error => {
-          console.error('Произошла ошибка:', error);
-          setServerError(error.message);
-        });
+      // Сохраняем токены
+      localStorage.setItem('access_token', result.access_token);
+      localStorage.setItem('refresh_token', result.refresh_token);
 
-      
-    } else {
-      setErrors(validationResult.errors);
+      // Запрашиваем профиль
+      const profileResponse = await apiRequest({
+        url: 'https://api.vickz.ru/profile',
+        method: 'GET',
+        auth: true
+      });
+
+      if (!profileResponse.ok) {
+        throw new Error('Failed to fetch profile');
+      }
+
+      const profileData = await profileResponse.json();
+      console.log('Профиль пользователя:', profileData);
+
+      // Сохраняем профиль в localStorage
+      localStorage.setItem('user_profile', JSON.stringify(profileData));
+      localStorage.setItem('id', profileData.id)
+      localStorage.setItem('email', profileData.email)
+      localStorage.setItem('username', profileData.username)
+      localStorage.setItem('name', profileData.name)
+      localStorage.setItem('description', profileData.description)
+
+      // Переход на главную страницу
+      window.location.href = '#/main';
+
+    } catch (error) {
+      console.error('Произошла ошибка:', error);
+      setServerError(error.message);
     }
-  };
+  } else {
+    setErrors(validationResult.errors);
+  }
+};
 
   return (
     <div className="signup-container">

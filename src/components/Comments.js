@@ -29,7 +29,7 @@ const likeComment = async (commentId, like) => {
       url: `https://api.vickz.ru/like-comment/${commentId}`,
       method: 'POST',
       params: { like },
-      auth: true
+      auth: true,
     });
 
     if (!response.ok) {
@@ -127,6 +127,8 @@ function CommentsSection({ videoId, showComments, toggleComments }) {
         {
           ...result,
           user_id: localStorage.getItem('id'),
+          user_name: localStorage.getItem('name'),
+          user_username: localStorage.getItem('username'),
           content: newComment.trim(),
           likes: 0,
           dislikes: 0,

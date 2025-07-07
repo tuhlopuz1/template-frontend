@@ -61,7 +61,7 @@ function WatchPage() {
             <div className={`content-area ${showComments ? 'with-comments' : ''}`}>
 
                 {/* Кнопка назад */}
-                <button className="back-button" onClick={() => navigate(-1)}>
+                <button className="back-to-main-button" onClick={() => navigate(-1)}>
                     <FiArrowLeft size={30}/>
                 </button>
 
