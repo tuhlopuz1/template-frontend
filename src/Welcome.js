@@ -68,6 +68,11 @@ const WelcomePage = () => {
     }
   ];
 
+  if (localStorage.getItem('access_token')) {
+    console.log('123')
+    window.location.href = '/#/main'
+  }
+
   return (
     <div className="welcome-page">
       <Navbar/>
