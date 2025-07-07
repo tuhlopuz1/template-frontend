@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-
+import { useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import FeatureCard from "./components/FeatureCard.js";
 import './styles/welcome.css';
 import Navbar from "./components/NavBar";
@@ -7,6 +7,16 @@ import Footer from "./components/Footer";
 
 
 const WelcomePage = () => {
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem('access_token')) {
+      navigate('/main');
+    }
+  }, [navigate]);
+
   const features = [
     {
       icon: (
@@ -68,10 +78,6 @@ const WelcomePage = () => {
     }
   ];
 
-  if (localStorage.getItem('access_token')) {
-    console.log('123')
-    window.location.href = '/#/main'
-  }
 
   return (
     <div className="welcome-page">
